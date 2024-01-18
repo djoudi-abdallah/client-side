@@ -47,7 +47,7 @@ function Achats() {
   };
 
   return (
-    <div className="flex flex-col w-full md:w-[77%] lg:w-[80%] bg-gray-300/30">
+    <div className="flex flex-col w-full md:w-[77%] lg:w-[80%] bg-gray-300/30 overflow-auto">
       <NavBar />
       <div className="rounded-xl  bg-white shadow-2xl m-4">
         <TopBoard />
