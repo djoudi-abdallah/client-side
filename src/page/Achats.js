@@ -32,7 +32,7 @@ function Achats() {
   };
 
   const handleEditClick = (achat) => {
-    setEditingAchat(achat);
+    setCurrentAchat(achat);
     setIsModalOpen(true); // Open the modal for editing
   };
 
