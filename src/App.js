@@ -10,6 +10,9 @@ import Employe from "./page/Employe";
 import Fournisseur from "./page/Fournisseur";
 import Client from "./page/Client";
 import axios from "axios";
+import FirstShop from "./page/FirstShop";
+import SecondShop from "./page/SecondShop";
+import ThirdShop from "./page/ThirdShop";
 
 function App() {
   function getRequest() {
@@ -43,6 +46,9 @@ function App() {
                   <Route path="/Employe" element={<Employe />} />
                   <Route path="/Fournisseur" element={<Fournisseur />} />
                   <Route path="/Client" element={<Client />} />
+                  <Route path="/FirstShop" element={<FirstShop />} />
+                  <Route path="/SecondShop" element={<SecondShop />} />
+                  <Route path="/ThirdShop" element={<ThirdShop />} />
                 </Routes>
               </>
             }

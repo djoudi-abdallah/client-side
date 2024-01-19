@@ -113,7 +113,7 @@ const handleDeleteClick = (code) => {
   onClose={closeModal}
   onSave={handleSaveFournisseur}
   fournisseurData={currentFournisseur}
-/>
+ />
 
       </div>
       <div className='w-full flex flex-col items-center'>

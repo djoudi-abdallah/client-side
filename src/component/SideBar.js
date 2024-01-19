@@ -13,9 +13,13 @@ import { GiStockpiles } from "react-icons/gi";
 function SideBar() {
  
   const [showStakeholders, setShowStakeholders] = useState(false);
+  const [showShops, setShowShops] = useState(false);
 
   const toggleStakeholders = () => {
     setShowStakeholders(!showStakeholders);
+  };
+  const toggleShops = () => {
+    setShowShops(!showShops);
   };
   
   
@@ -67,9 +71,24 @@ function SideBar() {
               )}
               </div>
               </li>
-              <li className='flex py-2 items-center cursor-pointer'>
+              <li className='flex py-2 cursor-pointer'>
               <FaShopSlash size={25} />
-              <h1 className='md:px-4 lg:px-14'>Shops</h1>
+              <div className='flex flex-col items-center'>
+              <h1 onClick={toggleShops} className='md:px-4 lg:px-14'>Shops</h1>
+              {showShops && (
+                  <ul className='mt-2 text-orange-400'>
+                  <Link to='/FirstShop'>
+                    <li className='pl-4 m-2'  >First</li>
+                  </Link>  
+                  <Link to='/SecondShop'>  
+                     <li className='pl-4 m-2' >second</li>
+                  </Link>
+                  <Link to='/ThirdShop'>                    
+                    <li className='pl-4 m-2' >third</li>
+                  </Link>
+                  </ul>
+              )}
+              </div>
               </li>
               <li className='flex py-2 items-center cursor-pointer'>
                 <Link className='flex' to='/Stock'>

@@ -19,6 +19,7 @@ function Ventes() {
     const [filteredVentes, setFilteredVentes] = useState(ventes);
     const [currentSale, setCurrentSale] = useState(null);
     
+    
 
 
 useEffect(() => {
@@ -51,9 +52,18 @@ useEffect(() => {
     const filterVentes = () => {
       setFilteredVentes(
         ventes.filter((vente) => {
-          const termMatches = vente[searchType].toLowerCase().includes(searchTerm.toLowerCase());
-          const dateMatches = searchDate ? vente.dateVente >= new Date(searchDate) : true;
-          return termMatches && dateMatches;
+          const termMatches = searchType === 'client' || searchType === 'produit'
+  ? parseInt(vente[searchType], 10) === parseInt(searchTerm, 10)
+  : vente[searchType] && typeof vente[searchType] === 'string'
+      ? vente[searchType].toLowerCase().includes(searchTerm.toLowerCase())
+      : false;
+
+
+      const dateMatches = searchDate 
+        ? new Date(vente.dateVente).getTime() >= new Date(searchDate).getTime() 
+        : true;
+
+      return termMatches && dateMatches;
         })
       );
     };
@@ -100,17 +110,38 @@ useEffect(() => {
       const [isModalOpen, setIsModalOpen] = useState(false);
 
      
-      const handleSaveSale = (saleData) => {
-        axios.post('http://localhost:3001/ventes', saleData)
-        .then(() => {
-          fetchVentes();
-        })
-        .catch(error => {
-          console.error('Error saving vente:', error);
-          // Optionally, show this error in the UI
-        });
+     
+const handleSaveSale = (saleData) => {
+  
+  if (currentSale) {
+   
+    axios.put(`http://localhost:3001/ventes/${currentSale.code}`, saleData)
+      .then(response => {
+
+        fetchVentes();
+        closeModal();
+      })
+      .catch(error => {
+        console.error('Error updating vente:', error);
+        
+      });
+  } else {
+    // Create new sale
+    axios.post('http://localhost:3001/ventes', saleData)
+      .then(response => {
+        
+        fetchVentes();
+        closeModal();
+      })
+      .catch(error => {
+        console.error('Error adding vente:', error);
+        
+      });
+  }
+};
       
-      };
+      
+      
       
     
     return (
@@ -191,7 +222,7 @@ useEffect(() => {
         {isEditing ? (
           <>
            <VscTrash onClick={() => handleDeleteClick(sale.code)} className='cursor-pointer text-red-500'/>
-            <VscEdit onClick={handleEditClick} className='cursor-pointer text-blue-500 ml-2'/>
+            <VscEdit onClick={() => handleEditClick(sale)} className='cursor-pointer text-blue-500 ml-2'/>
           </>
         ) : (
           <VscActivateBreakpoints className='cursor-pointer'/>

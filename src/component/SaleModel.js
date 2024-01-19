@@ -1,7 +1,7 @@
 // SaleModal.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const SaleModal = ({ isOpen, onClose, onSave }) => {
+const SaleModal = ({ isOpen, onClose, onSave, saleData }) => {
   const [sale, setSale] = useState({
     client: '',
     produit: '',
@@ -10,6 +10,12 @@ const SaleModal = ({ isOpen, onClose, onSave }) => {
     montantEncaisse: '',
     status: 'Non payé',
   });
+
+  useEffect(() => {
+    if (saleData) {
+      setSale(saleData);
+    }
+  }, [saleData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,6 +37,14 @@ const SaleModal = ({ isOpen, onClose, onSave }) => {
         
         <form onSubmit={handleSubmit} className="space-y-4 pt-3">
         <h2 className="text-2xl font-bold">Add Sale</h2> 
+        <input
+            type="text"
+            name="centre"
+            placeholder="Center"
+            value={sale.center}
+            onChange={handleChange}
+            className="block w-full p-2 border rounded"
+          />
         <input
             type="text"
             name="client"
