@@ -17,8 +17,11 @@ const PurchaseModal = ({ isOpen, onClose, onSave, achatData }) => {
   );
 
   useEffect(() => {
-    setPurchase(
-      achatData || {
+    if (isOpen && achatData) {
+      setPurchase(achatData);
+    } else {
+      // Reset to default values when closing the modal or when no data is passed
+      setPurchase({
         id_fournisseur: "",
         id_produit: "",
         quantite: "",
@@ -27,9 +30,10 @@ const PurchaseModal = ({ isOpen, onClose, onSave, achatData }) => {
         centre: "",
         prixUnitaireHT: "",
         montantVerse: "",
-      }
-    );
-  }, [achatData]);
+      });
+    }
+  }, [achatData, isOpen]);
+    
   const [products, setProducts] = useState([]);
 
   const getRequest = async () => {

@@ -32,7 +32,7 @@ function Achats() {
   };
 
   const handleEditClick = (achat) => {
-    setEditingAchat(achat);
+    setCurrentAchat(achat); // Set the current achat to the one you want to edit
     setIsModalOpen(true); // Open the modal for editing
   };
 
@@ -69,7 +69,7 @@ function Achats() {
 
   const handleSavePurchase = (achatData) => {
     if (currentAchat) {
-      // Update existing Achat
+      console.log(currentAchat);
       axios
         .put(`http://localhost:3001/achats/${currentAchat.code}`, achatData)
         .then((response) => {
@@ -79,7 +79,7 @@ function Achats() {
           console.error("Error updating Achat:", error);
         });
     } else {
-      // Add new Achat
+     
       axios
         .post("http://localhost:3001/achats", achatData)
         .then((response) => {
@@ -111,6 +111,7 @@ function Achats() {
             onSave={handleSavePurchase}
             achatData={currentAchat}
           />
+
         </div>
         <div className="w-full flex flex-col items-center">
           <div className="grid gap-2 grid-cols-4 md:grid-cols-7 text-center py-4 place-content-center w-full font-serif">

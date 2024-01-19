@@ -77,13 +77,13 @@ function SideBar() {
               <h1 onClick={toggleShops} className='md:px-4 lg:px-14'>Shops</h1>
               {showShops && (
                   <ul className='mt-2 text-orange-400'>
-                  <Link to='/FirstShop'>
+                  <Link to={`/shop?id=1`}>
                     <li className='pl-4 m-2'  >First</li>
                   </Link>  
-                  <Link to='/SecondShop'>  
+                  <Link to={`/shop?id=2`}>  
                      <li className='pl-4 m-2' >second</li>
                   </Link>
-                  <Link to='/ThirdShop'>                    
+                  <Link to={`/shop?id=3`}>                    
                     <li className='pl-4 m-2' >third</li>
                   </Link>
                   </ul>

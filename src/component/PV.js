@@ -1,11 +1,11 @@
 import React from 'react'
 
-function ThirdShop() {
+function PV() {
   return (
     <div>
-      
+      pv
     </div>
   )
 }
 
-export default ThirdShop
+export default PV
