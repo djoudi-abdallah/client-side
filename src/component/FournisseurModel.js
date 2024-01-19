@@ -1,13 +1,23 @@
 // FournisseurModal.js
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 
-const FournisseurModal = ({ isOpen, onClose, onSave }) => {
-  const [fournisseur, setFournisseur] = useState({
+const FournisseurModal = ({ isOpen, onClose, onSave, fournisseurData }) => {
+  const [fournisseur, setFournisseur] = useState(fournisseurData || {
     nom: '',
     prenom: '',
     adresse: '',
     telephone: '',
   });
+
+  useEffect(() => {
+    setFournisseur(fournisseurData || {
+      nom: '',
+      prenom: '',
+      adresse: '',
+      telephone: '',
+    });
+  }, [fournisseurData]);
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,10 +26,9 @@ const FournisseurModal = ({ isOpen, onClose, onSave }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(fournisseur);
+    onSave(fournisseur); 
     onClose();
   };
-
   if (!isOpen) return null;
 
   return (

@@ -1,10 +1,11 @@
-import React , {useState } from 'react'
+import React , {useState , useEffect} from 'react'
 import NavBar from '../component/NavBar'
 import { FaSearch } from "react-icons/fa";
-import VentesData from '../data.js/VenteData';
 import { VscActivateBreakpoints, VscTrash, VscEdit } from 'react-icons/vsc';
 import TopBoard from '../component/TopBoard';
 import SaleModal from '../component/SaleModel';
+import axios from 'axios';
+
 
 
 
@@ -14,8 +15,25 @@ function Ventes() {
     const [searchType, setSearchType] = useState('client');
     const [searchTerm, setSearchTerm] = useState('');
     const [searchDate, setSearchDate] = useState('');
-    const [filteredVentes, setFilteredVentes] = useState(VentesData);
-  
+    const [ventes, setVentes] = useState([]);
+    const [filteredVentes, setFilteredVentes] = useState(ventes);
+    const [currentSale, setCurrentSale] = useState(null);
+    
+
+
+useEffect(() => {
+  axios.get('http://localhost:3001/ventes')
+    .then(response => {
+      setVentes(response.data);
+      setFilteredVentes(response.data);
+    })
+    .catch(error => {
+      console.error('Error fetching ventes:', error);
+    });
+}, []);
+
+
+
     const handleChangeType = (e) => {
       setSearchType(e.target.value);
       setSearchTerm('');
@@ -32,13 +50,25 @@ function Ventes() {
   
     const filterVentes = () => {
       setFilteredVentes(
-        VentesData.filter((vente) => {
+        ventes.filter((vente) => {
           const termMatches = vente[searchType].toLowerCase().includes(searchTerm.toLowerCase());
           const dateMatches = searchDate ? vente.dateVente >= new Date(searchDate) : true;
           return termMatches && dateMatches;
         })
       );
     };
+    const fetchVentes = () => {
+      axios.get('http://localhost:3001/ventes')
+        .then(response => {
+          setVentes(response.data);
+          setFilteredVentes(response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching ventes:', error);
+        });
+    };
+
+
 
     const [isEditing, setIsEditing] = useState(false);
 
@@ -46,22 +76,42 @@ function Ventes() {
         setIsEditing(!isEditing);
       };
 
-    const handleEditClick = () => {
-        
-        console.log('Editing sale:');
+      const closeModal = () => {
+        setIsModalOpen(false);
+        setCurrentSale(null);
+      };
+
+      const handleEditClick = (sale) => {
+        setCurrentSale(sale);
+        setIsModalOpen(true);
       };
     
-    const handleDeleteClick = () => {
-       
-        console.log('Deleting sale:');
+      const handleDeleteClick = (code) => {
+        axios.delete(`http://localhost:3001/ventes/${code}`)
+          .then(() => {
+         
+            fetchVentes();
+          })
+          .catch(error => {
+            console.error('Error deleting vente:', error);
+          });
       };
+      
       const [isModalOpen, setIsModalOpen] = useState(false);
 
      
-      const handleSaveSale = (sale) => {
-        // Ajouter la logique pour sauvegarder la vente
-        console.log(sale);
+      const handleSaveSale = (saleData) => {
+        axios.post('http://localhost:3001/ventes', saleData)
+        .then(() => {
+          fetchVentes();
+        })
+        .catch(error => {
+          console.error('Error saving vente:', error);
+          // Optionally, show this error in the UI
+        });
+      
       };
+      
     
     return (
       <div className=' bg-gray-300/30 w-screen md:w-[77%] lg:w-[80%] overflow-y-scroll  items-center justify-center'>
@@ -111,19 +161,20 @@ function Ventes() {
       </button>
       
       <SaleModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleSaveSale}
-      />
+  isOpen={isModalOpen}
+  onClose={closeModal}
+  onSave={handleSaveSale}
+  saleData={currentSale}
+/>
       </div>
       <div className='w-full flex flex-col items-center '>
          <div className='grid gap-2 grid-cols-4 md:grid-cols-7 text-center py-4 place-content-center mx-2  w-full font-serif'>
             <h1>Product</h1>
             <h1>Client</h1>
-            <h1 className='hidden md:flex'>Date</h1>
+            <h1 className='hidden md:flex md:justify-center'>Date</h1>
             <h1>Count</h1>
-            <h1 className='hidden md:flex'>Total amount</h1>
-            <h1 className='hidden md:flex'>Paiment Type</h1>
+            <h1 className='hidden md:flex md:justify-center'>Total amount</h1>
+            <h1 className='hidden md:flex md:justify-center '>Paiment Type</h1>
             <h1>Edit</h1>
          </div>   
     
@@ -131,15 +182,15 @@ function Ventes() {
        <div key={index} className='grid gap-2 grid-cols-4 md:grid-cols-7 text-center place-content-center bg-gray-400/30  w-[98%] my-2 py-3 rounded-xl justify-center'>
          <h1>{sale.produit}</h1>
          <h1>{sale.client}</h1>
-         <h1 className='hidden md:flex'>{sale.dateVente.toLocaleDateString()}</h1>
+         <h1 className='hidden md:flex md:justify-center'>{new Date(sale.dateVente).toLocaleDateString()}</h1>
          <h1>{sale.prixUnitaire}</h1>
-         <h1 className='hidden md:flex'>{sale.quantite}</h1>
-         <h1 className='hidden md:flex'>{sale.prixUnitaire*sale.quantite}</h1>
+         <h1 className='hidden md:flex md:justify-center'>{sale.quantite}</h1>
+         <h1 className='hidden md:flex md:justify-center'>{sale.prixUnitaire*sale.quantite}</h1>
      
          <div onClick={handleIconClick} className='flex items-center justify-center'>
         {isEditing ? (
           <>
-            <VscTrash onClick={handleDeleteClick} className='cursor-pointer text-red-500'/>
+           <VscTrash onClick={() => handleDeleteClick(sale.code)} className='cursor-pointer text-red-500'/>
             <VscEdit onClick={handleEditClick} className='cursor-pointer text-blue-500 ml-2'/>
           </>
         ) : (
