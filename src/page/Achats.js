@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NavBar from "../component/NavBar";
 import { VscActivateBreakpoints, VscTrash, VscEdit } from "react-icons/vsc";
 import TopBoard from "../component/TopBoard";
@@ -7,20 +7,23 @@ import axios from "axios";
 
 function Achats() {
   const [achat, setAchat] = useState([]);
-  function getRequest() {
-    axios
-      .get("http://localhost:3001/achats/")
-      .then((response) => {
-        console.log("Data:", response.data);
-        setAchat(response.data);
-        console.log("Status Code:", response.status);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }
+  const [currentAchat, setCurrentAchat] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  getRequest();
+  useEffect(() => {
+    // Fetch achats when the component is mounted
+    getRequest();
+  }, []);
+
+  const getRequest = async () => {
+    try {
+      const response = await axios.get("http://localhost:3001/achats/");
+      setAchat(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -28,21 +31,64 @@ function Achats() {
     setIsEditing(!isEditing);
   };
 
-  const handleEditClick = () => {
-    console.log("Editing sale:");
+  const handleEditClick = (achat) => {
+    setEditingAchat(achat);
+    setIsModalOpen(true); // Open the modal for editing
   };
 
-  const handleDeleteClick = () => {
-    console.log("Deleting sale:");
+  const handleDeleteClick = async (code) => {
+    try {
+      // Send a DELETE request to the backend
+      await axios.delete(`http://localhost:3001/achats/${code}`);
+      // If successful, remove the item from the state
+      const updatedAchats = achat.filter((achat) => achat.code !== code);
+      setAchat(updatedAchats);
+    } catch (error) {
+      console.error("Failed to delete the item:", error);
+      // Handle the error, maybe notify the user
+    }
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [purchaseData, setPurchaseData] = useState(null);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-  const handleSavePurchase = (data) => {
-    console.log(data); // Traitez les données ici (par exemple, les ajouter à un état global ou les envoyer à un serveur)
-    setPurchaseData(data);
+  const fetchAchats = () => {
+    axios
+      .get("http://localhost:3001/achats")
+      .then((response) => {
+        setAchat(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching achats", error);
+      });
+  };
+
+  useEffect(() => {
+    fetchAchats();
+  }, []);
+
+  const handleSavePurchase = (achatData) => {
+    if (currentAchat) {
+      // Update existing Achat
+      axios
+        .put(`http://localhost:3001/achats/${currentAchat.code}`, achatData)
+        .then((response) => {
+          fetchAchats();
+        })
+        .catch((error) => {
+          console.error("Error updating Achat:", error);
+        });
+    } else {
+      // Add new Achat
+      axios
+        .post("http://localhost:3001/achats", achatData)
+        .then((response) => {
+          fetchAchats();
+        })
+        .catch((error) => {
+          console.error("Error adding Achat:", error);
+        });
+    }
     closeModal();
   };
 
@@ -63,6 +109,7 @@ function Achats() {
             isOpen={isModalOpen}
             onClose={closeModal}
             onSave={handleSavePurchase}
+            achatData={currentAchat}
           />
         </div>
         <div className="w-full flex flex-col items-center">
@@ -76,16 +123,14 @@ function Achats() {
             <h1>Edit</h1>
           </div>
 
-          {achat.map((achat, index) => (
+          {achat.map((achat) => (
             <div
-              key={index}
+              key={achat.code}
               className="grid gap-2 grid-cols-4 md:grid-cols-7 text-center place-content-center bg-gray-400/30  w-[98%] my-2 py-3 rounded-xl justify-center"
             >
               <h1>{achat.productDetails.name}</h1>
               <h1>
-                {achat.fournisseurDetails.nom +
-                  " " +
-                  achat.fournisseurDetails.prenom}
+                {achat.fournisseurname} {achat.fournisseurprenom}
               </h1>
               <h1 className="hidden md:flex md:justify-center">
                 {new Date(achat.dateAchat).toLocaleDateString()}
@@ -105,11 +150,11 @@ function Achats() {
                 {isEditing ? (
                   <>
                     <VscTrash
-                      onClick={handleDeleteClick}
+                      onClick={() => handleDeleteClick(achat.code)}
                       className="cursor-pointer text-red-500"
                     />
                     <VscEdit
-                      onClick={handleEditClick}
+                      onClick={() => handleEditClick(achat)}
                       className="cursor-pointer text-blue-500 ml-2"
                     />
                   </>
