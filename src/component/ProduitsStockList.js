@@ -2,26 +2,34 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { VscTrash, VscEdit, VscActivateBreakpoints } from 'react-icons/vsc';
 import TopBoard from './TopBoard';
+import { useSearchParams, useLocation } from 'react-router-dom';
 
 function ProduitsStockList() {
   const [products, setProducts] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [searchParams] = useSearchParams();
 
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const idShop = queryParams.get("id");
+﻿
+
   useEffect(() => {
 
-    const shopId = searchParams.get('id');
     
-    if (shopId) {
-      axios.get(`http://localhost:3001/produitStock?shopId=${shopId}`)
+    
+    
+      axios.get(`http://localhost:3001/produitStockShop/${idShop}`)
         .then(response => {
+          console.log(response.data);
           setProducts(response.data); 
         })
         .catch(error => {
           console.error("Error fetching products:", error);
         });
-    }
-  }, [searchParams]);
+ 
+  },);
   const handleEditClick = (product) => {
     console.log('Editing product:', product);
    
@@ -38,7 +46,6 @@ function ProduitsStockList() {
 
   return (
     <div className='bg-white w-full rounded-xl shadow-2xl'>
-      <TopBoard/>
       <h2 className="text-xl font-serif px-10 py-6">Product Stock Table:</h2>
       <div className='w-full flex flex-col items-center'>
         <div className='grid gap-2 grid-cols-4 text-center py-4 place-content-center w-full font-serif'>

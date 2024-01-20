@@ -15,8 +15,7 @@ import Shop from "./page/Shop";
 
 function App() {
   function getRequest() {
-    axios
-      .get("http://localhost:3001/centres")
+    axios.get("http://localhost:3001/centres")
       .then((response) => {
         console.log("Data:", response.data);
         console.log("Status Code:", response.status);

@@ -14,7 +14,7 @@ function Client() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/clients')
+    axios.get('http://localhost:3001/clients/1')
       .then(response => {
         setClients(response.data);
        

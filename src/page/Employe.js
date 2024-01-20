@@ -17,17 +17,7 @@ function Employe() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    axios.get('http://localhost:3001/employes')
-      .then(response => {
-        setEmployes(response.data);
-       
-      })
-      .catch(error => {
-        setError(error);
-      });
-     
-    }, []);
+
   
   const [isEditing, setIsEditing] = useState(false);
 
@@ -57,8 +47,9 @@ const handleDeleteClick = (code) => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
   const fetchEmployes = () => {
-    axios.get('http://localhost:3001/employes')
+    axios.get('http://localhost:3001/employes/0')
       .then(response => {
+        console.log(response.data);
         setEmployes(response.data);
       })
       .catch(error => {
