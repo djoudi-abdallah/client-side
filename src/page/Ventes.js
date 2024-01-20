@@ -23,7 +23,7 @@ function Ventes() {
 
 
 useEffect(() => {
-  axios.get('http://localhost:3001/ventes')
+  axios.get('http://localhost:3001/ventes/1')
     .then(response => {
       setVentes(response.data);
       setFilteredVentes(response.data);
@@ -68,7 +68,7 @@ useEffect(() => {
       );
     };
     const fetchVentes = () => {
-      axios.get('http://localhost:3001/ventes')
+      axios.get('http://localhost:3001/ventes/1')
         .then(response => {
           setVentes(response.data);
           setFilteredVentes(response.data);
