@@ -66,7 +66,7 @@ function TransfertsList() {
           <h1>Edit</h1>
         </div>   
   
-        {Array.isArray(transferts) && transferts.map((trf, index) => (
+        {transferts.map((trf, index) => (
           <div key={index} className='grid gap-2  md:grid-cols-5 grid-cols-4 text-center place-content-center bg-gray-400/30 w-[98%] my-2 py-3 rounded-xl justify-center'>
             <h1 className='hidden md:flex md:justify-center'>{trf.code}</h1>
             <h1>{trf.id_produit.name}</h1>
