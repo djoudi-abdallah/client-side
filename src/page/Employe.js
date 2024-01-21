@@ -135,7 +135,7 @@ employeData={currentEmploye}
         <>
          <VscTrash onClick={() => handleDeleteClick(emp.code)} className='cursor-pointer text-red-500'/>
          <VscEdit onClick={() => handleEditClick(emp)} className='cursor-pointer text-blue-500 ml-2'/> 
-         {console.log(emp)}
+        
         </>
       ) : (
         <VscActivateBreakpoints className='cursor-pointer'/>
