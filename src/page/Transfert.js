@@ -7,7 +7,7 @@ import TopBoard from '../component/TopBoard';
 import AddTransfertModal from '../component/AddTransfertModal'; // Import the AddTransfertModal
 import EditTransfertModal from '../component/EditTransfertModal'; // Import the EditTransfertModal
 
-function Produits() {
+function Transfert() {
   const [transferts, setTransferts] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [searchParams] = useSearchParams();
@@ -151,4 +151,4 @@ function Produits() {
   );
 }
 
-export default Produits;
+export default Transfert;
