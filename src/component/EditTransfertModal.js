@@ -4,7 +4,6 @@ const EditTransfertModal = ({ isOpen, onClose, onSave, currentTransfert }) => {
   const [quantite, setQuantite] = useState(0);
 
   useEffect(() => {
-    // Set the quantity to the current transfert's quantity when the modal opens
     if (currentTransfert) {
       setQuantite(currentTransfert.quantite || 0);
     }

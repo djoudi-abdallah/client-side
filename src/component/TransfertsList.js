@@ -96,7 +96,7 @@ const handleSaveTransfert = (updatedTransfert) => {
           <div key={index} className='grid gap-2  md:grid-cols-5 grid-cols-4 text-center place-content-center bg-gray-400/30 w-[98%] my-2 py-3 rounded-xl justify-center'>
             <h1 className='hidden md:flex md:justify-center'>{trf.code}</h1>
             {/* {console.log(trf.id_produit)} */}
-            <h1>{trf.productDetails}</h1>
+            <h1>{trf.productDetails.name}</h1>
             <h1>{trf.coutEquivalent}</h1>
             <h1>{trf.quantite}</h1>
             <div onClick={handleIconClick} className='flex items-center justify-center'>
