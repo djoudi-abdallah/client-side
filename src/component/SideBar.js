@@ -96,6 +96,12 @@ function SideBar() {
                   <h1 className='md:px-4 lg:px-14'>Stock</h1>
                 </Link>
               </li>
+              <li className='flex py-2 items-center cursor-pointer'>
+                <Link className='flex' to='/Transfert'>
+                  <GiStockpiles size={25} />
+                  <h1 className='md:px-4 lg:px-14'>Transfert</h1>
+                </Link>
+              </li>
             </ul>
         </div>
     

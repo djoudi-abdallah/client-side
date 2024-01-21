@@ -11,6 +11,7 @@ import Fournisseur from "./page/Fournisseur";
 import Client from "./page/Client";
 import axios from "axios";
 import Shop from "./page/Shop";
+import Transfert from "./page/Transfert";
 
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
                   <Route path="/Fournisseur" element={<Fournisseur />} />
                   <Route path="/Client" element={<Client />} />
                   <Route path="/shop" element={<Shop />} />
+                  <Route path="/Transfert" element={<Transfert />} />
                 </Routes>
               </>
             }

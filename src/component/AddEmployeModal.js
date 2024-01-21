@@ -1,34 +1,27 @@
-// ClientModal.js
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-const ClientModal = ({ isOpen, onClose, onSave, clientData }) => {
-  const [client, setClient] = useState(clientData || {
+const AddEmployeModal = ({ isOpen, onClose, onSave }) => {
+  const initialEmployeState = {
     nom: '',
     prenom: '',
     adresse: '',
     telephone: '',
+    salaire_jour: 0,
     centre: '',
-  });
-
-  useEffect(() => {
-    setClient(clientData || {
-      nom: '',
-      prenom: '',
-      adresse: '',
-      telephone: '',
-      centre: '',
-    });
-  }, [clientData]);
+  };
+  const [employe, setEmploye] = useState(initialEmployeState);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setClient({ ...client, [name]: value });
+    const updatedValue = name === 'salaire_jour' ? parseFloat(value) : value;
+    setEmploye({ ...employe, [name]: updatedValue });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(client); 
+    onSave(employe);
     onClose();
+    setEmploye(initialEmployeState);
   };
 
   if (!isOpen) return null;
@@ -37,13 +30,13 @@ const ClientModal = ({ isOpen, onClose, onSave, clientData }) => {
     <div className="fixed inset-0 bg-blue-400 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center">
       <div className="relative bg-white p-8 rounded-2xl shadow-lg w-[90%] md:w-[40%]">
         <form onSubmit={handleSubmit} className="space-y-4 pt-3">
-          <h2 className="text-2xl font-bold">Add Client</h2>
-
+          <h2 className="text-2xl font-bold">Add Employee</h2>
+  
           <input
             type="text"
             name="nom"
             placeholder="Nom"
-            value={client.nom}
+            value={employe.nom}
             onChange={handleChange}
             className="block w-full p-2 border rounded"
           />
@@ -51,7 +44,7 @@ const ClientModal = ({ isOpen, onClose, onSave, clientData }) => {
             type="text"
             name="prenom"
             placeholder="Prénom"
-            value={client.prenom}
+            value={employe.prenom}
             onChange={handleChange}
             className="block w-full p-2 border rounded"
           />
@@ -59,7 +52,7 @@ const ClientModal = ({ isOpen, onClose, onSave, clientData }) => {
             type="text"
             name="adresse"
             placeholder="Adresse"
-            value={client.adresse}
+            value={employe.adresse}
             onChange={handleChange}
             className="block w-full p-2 border rounded"
           />
@@ -67,28 +60,36 @@ const ClientModal = ({ isOpen, onClose, onSave, clientData }) => {
             type="text"
             name="telephone"
             placeholder="Numéro de Téléphone"
-            value={client.telephone}
+            value={employe.telephone}
+            onChange={handleChange}
+            className="block w-full p-2 border rounded"
+          />
+          <input
+            type="number"
+            name="salaire_jour"
+            placeholder="Salaire par Jour"
+            value={employe.salaire_jour}
             onChange={handleChange}
             className="block w-full p-2 border rounded"
           />
           <input
             type="text"
             name="centre"
-            placeholder="centre"
-            value={client.centre}
+            placeholder="Centre"
+            value={employe.centre}
             onChange={handleChange}
             className="block w-full p-2 border rounded"
           />
           <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-            Enregistrer
+            Save
           </button>
         </form>
         <button onClick={onClose} className="absolute top-0 right-0 p-4">
-          Fermer
+          Close
         </button>
       </div>
     </div>
   );
 };
 
-export default ClientModal;
+export default AddEmployeModal;
