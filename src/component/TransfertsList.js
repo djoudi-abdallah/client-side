@@ -50,11 +50,11 @@ function TransfertsList() {
 
 
   
- console.log(transferts);
+
   return (
     <div className='bg-white w-full rounded-xl shadow-2xl'>
       
-          <h2 className="text-xl font-serif px-10 py-6">Product Stock Table:</h2>
+          <h2 className="text-xl font-serif px-10 py-6">Transferts Table:</h2>
           
       
       <div className='w-full flex flex-col items-center'>
@@ -68,8 +68,8 @@ function TransfertsList() {
   
         {Array.isArray(transferts) && transferts.map((trf, index) => (
           <div key={index} className='grid gap-2  md:grid-cols-5 grid-cols-4 text-center place-content-center bg-gray-400/30 w-[98%] my-2 py-3 rounded-xl justify-center'>
-            <h1 className='hidden md:flex'>{trf.code}</h1>
-            <h1>{trf.id_produit}</h1>
+            <h1 className='hidden md:flex md:justify-center'>{trf.code}</h1>
+            <h1>{trf.id_produit.name}</h1>
             <h1>{trf.coutEquivalent}</h1>
             <h1>{trf.quantite}</h1>
             <div onClick={handleIconClick} className='flex items-center justify-center'>
