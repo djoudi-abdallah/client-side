@@ -67,23 +67,25 @@ function ProduitsStockList() {
         </div>   
 
         {products.map((prd, index) => (
-          <div key={index} className='grid gap-2 grid-cols-4 text-center place-content-center bg-gray-400/30 w-[98%] my-2 py-3 rounded-xl justify-center'>
-            <h1>{prd.code}</h1>
-            <h1>{prd.produitDetails.name}</h1>
-            {/* <h1>{prd.status}</h1> */}
-            <h1>{prd.quantite}</h1>
-            <div onClick={handleIconClick} className='flex items-center justify-center'>
-        {isEditing ? (
-          <>
-            <VscTrash onClick={() => handleDeleteClick(prd.code)} className='cursor-pointer text-red-500' />
-           
-          </>
-        ) : (
-          <VscActivateBreakpoints className='cursor-pointer text-red-600' />
-        )}
-      </div>
-          </div>
-        ))}
+  <div key={index} className='grid gap-2 grid-cols-4 text-center place-content-center bg-gray-400/30 w-[98%] my-2 py-3 rounded-xl justify-center'>
+    <h1>{prd.code}</h1>
+    {prd.produitDetails ? (
+      <h1>{prd.produitDetails.name}</h1>
+    ) : (
+      <h1>No name available</h1> // Display a fallback message or handle the case where 'prd.produitDetails' is null
+    )}
+    <h1>{prd.quantite}</h1>
+    <div onClick={handleIconClick} className='flex items-center justify-center'>
+      {isEditing ? (
+        <>
+          <VscTrash onClick={() => handleDeleteClick(prd.code)} className='cursor-pointer text-red-500' />
+        </>
+      ) : (
+        <VscActivateBreakpoints className='cursor-pointer text-red-600' />
+      )}
+    </div>
+  </div>
+))}
       </div>
     </div>
   );
