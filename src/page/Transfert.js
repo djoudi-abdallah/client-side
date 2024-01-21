@@ -57,7 +57,7 @@ function Transfert() {
 
   const fetchTransferts = () => {
     axios
-      .get(`http://localhost:3001/transfertsShop/${idShop}`)
+      .get(`http://localhost:3001/transferts`) // Modify the API endpoint to retrieve all transferts
       .then((response) => {
         setTransferts(response.data);
       })
@@ -120,7 +120,8 @@ function Transfert() {
                       className='grid gap-2  md:grid-cols-5 grid-cols-4 text-center place-content-center bg-gray-400/30 w-[98%] my-2 py-3 rounded-xl justify-center'
                     >
                       <h1 className='hidden md:flex md:justify-center'>{trf.code}</h1>
-                      <h1>{trf.productDetails.name}</h1>
+                      <h1><h1>{trf.productDetails ? trf.productDetails.name : 'N/A'}</h1>
+</h1>
                       <h1>{trf.coutEquivalent}</h1>
                       <h1>{trf.quantite}</h1>
                       <div onClick={handleIconClick} className='flex items-center justify-center'>
