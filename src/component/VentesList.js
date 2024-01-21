@@ -5,11 +5,10 @@ import { VscActivateBreakpoints, VscTrash, VscEdit } from 'react-icons/vsc';
 import TopBoard from '../component/TopBoard';
 import SaleModal from '../component/SaleModel';
 import axios from 'axios';
+import { useSearchParams, useLocation } from 'react-router-dom';
 
 
-
-
-function Ventes() {
+function VentesList() {
    
     
     const [searchType, setSearchType] = useState('client');
@@ -20,13 +19,18 @@ function Ventes() {
     const [currentSale, setCurrentSale] = useState(null);
     
     
-
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const idShop = queryParams.get("id");
+  ﻿
 
 useEffect(() => {
-  axios.get('http://localhost:3001/ventes/1')
+  axios.get(`http://localhost:3001/ventes/${idShop}`)
     .then(response => {
-      setVentes(response.data);
-      setFilteredVentes(response.data);
+        setVentes(response.data);
+        setFilteredVentes(response.data);
+        console.log(ventes);
+      
     })
     .catch(error => {
       console.error('Error fetching ventes:', error);
@@ -68,7 +72,7 @@ useEffect(() => {
       );
     };
     const fetchVentes = () => {
-      axios.get('http://localhost:3001/ventes/1')
+      axios.get(`http://localhost:3001/ventes/${idShop}`)
         .then(response => {
           setVentes(response.data);
           setFilteredVentes(response.data);
@@ -126,7 +130,7 @@ const handleSaveSale = (saleData) => {
         
       });
   } else {
-
+    // Create new sale
     axios.post('http://localhost:3001/ventes', saleData)
       .then(response => {
         
@@ -145,9 +149,9 @@ const handleSaveSale = (saleData) => {
       
     
     return (
-      <div className=' bg-gray-300/30 w-screen md:w-[77%] lg:w-[80%] overflow-y-scroll  items-center justify-center'>
-        <NavBar/>
-        <div className='m-2 md:m-4 w-[94%] px-1 md:w-[97%] bg-white rounded shadow-xl flex items-center'>
+      <div className='  w-full  overflow-y-auto overflow-x-hidden  items-center justify-center'>
+        
+        <div className=' w-full px-1 bg-white mt-2 rounded shadow-xl flex items-center'>
         <select
   className='mr-2 p-3 w-[4%] md:w-[30%] select-hidden md:select-visible border-none'
   value={searchType}
@@ -175,12 +179,12 @@ const handleSaveSale = (saleData) => {
           </button>
         </div>
   
-        <div className='w-[96%] bg-white rounded-xl shadow-xl m-2 md:m-4'>
+        <div className='w-full mt-3 bg-white  shadow-xl '>
     {/* Header */}
 
 
     <div className='rounded-xl  bg-white shadow-2xl w-full'>
-     <TopBoard/>
+ 
       <div className='flex justify-between mx-2 items-center'>
       <h2 className="text-xl font-serif p-4 pl-10">Sales Table</h2>
       
@@ -211,12 +215,12 @@ const handleSaveSale = (saleData) => {
     
       {filteredVentes.map((sale , index) =>  (
        <div key={index} className='grid gap-2 grid-cols-4 md:grid-cols-7 text-center place-content-center bg-gray-400/30  w-[98%] my-2 py-3 rounded-xl justify-center'>
-         <h1>{sale.produit}</h1>
+         <h1>{sale.produitNom}</h1>
          <h1>{sale.client}</h1>
          <h1 className='hidden md:flex md:justify-center'>{new Date(sale.dateVente).toLocaleDateString()}</h1>
          <h1>{sale.prixUnitaire}</h1>
          <h1 className='hidden md:flex md:justify-center'>{sale.quantite}</h1>
-         <h1 className='hidden md:flex md:justify-center'>{sale.prixUnitaire*sale.quantite}</h1>
+         <h1 className='hidden md:flex md:justify-center'>{sale.montantTotal}</h1>
      
          <div onClick={handleIconClick} className='flex items-center justify-center'>
         {isEditing ? (
@@ -240,4 +244,4 @@ const handleSaveSale = (saleData) => {
   )
 }
 
-export default Ventes
+export default VentesList;

@@ -17,17 +17,7 @@ function Fournisseur() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    axios.get('http://localhost:3001/fournisseurs')
-      .then(response => {
-        setFournisseurs(response.data);
-       
-      })
-      .catch(error => {
-        setError(error);
-      });
-     
-    }, []);
+ 
   
   const [isEditing, setIsEditing] = useState(false);
 

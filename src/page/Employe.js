@@ -47,7 +47,7 @@ const handleDeleteClick = (code) => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
   const fetchEmployes = () => {
-    axios.get('http://localhost:3001/employes/0')
+    axios.get('http://localhost:3001/employes/1')
       .then(response => {
         console.log(response.data);
         setEmployes(response.data);

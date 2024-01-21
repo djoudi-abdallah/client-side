@@ -13,17 +13,6 @@ function Client() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    axios.get('http://localhost:3001/clients/1')
-      .then(response => {
-        setClients(response.data);
-       
-      })
-      .catch(error => {
-        setError(error);
-      });
-     
-    }, []);
   
   const [isEditing, setIsEditing] = useState(false);
 
@@ -39,7 +28,7 @@ function Client() {
       
 
       const fetchClients = () => {
-        axios.get('http://localhost:3001/clients')
+        axios.get('http://localhost:3001/clients/1')
           .then(response => {
             setClients(response.data);
           })
@@ -111,7 +100,7 @@ const handleDeleteClick = (code) => {
 isOpen={isModalOpen}
 onClose={closeModal}
 onSave={handleSaveclient}
-fournisseurData={currentClient}
+clientData={currentClient}
 />
 
     </div>

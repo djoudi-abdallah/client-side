@@ -5,6 +5,7 @@ const ProductModal = ({ isOpen, onClose, onSave }) => {
   const [designation, setDesignation] = useState('');
   const [status, setStatus] = useState('');
   const [price, setPrice] = useState();
+  const [centre, setCentre] = useState();
 
   const handleSave = () => {
     // You can perform validation or other actions before saving
@@ -63,6 +64,17 @@ const ProductModal = ({ isOpen, onClose, onSave }) => {
               placeholder='PrixUnitaire'
               value={price}
               onChange={(e) => setPrice(e.target.value)}
+              className="mt-1 p-2 w-full border rounded-md"
+            />
+          </div>
+          <div className="mb-4">
+            
+            <input
+              type="number"
+              id="centre"
+              placeholder='centre'
+              value={centre}
+              onChange={(e) => setCentre(e.target.value)}
               className="mt-1 p-2 w-full border rounded-md"
             />
           </div>

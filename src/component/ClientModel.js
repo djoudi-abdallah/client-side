@@ -7,6 +7,7 @@ const ClientModal = ({ isOpen, onClose, onSave, clientData }) => {
     prenom: '',
     adresse: '',
     telephone: '',
+    centre: '',
   });
 
   useEffect(() => {
@@ -15,6 +16,7 @@ const ClientModal = ({ isOpen, onClose, onSave, clientData }) => {
       prenom: '',
       adresse: '',
       telephone: '',
+      centre: '',
     });
   }, [clientData]);
 
@@ -66,6 +68,14 @@ const ClientModal = ({ isOpen, onClose, onSave, clientData }) => {
             name="telephone"
             placeholder="Numéro de Téléphone"
             value={client.telephone}
+            onChange={handleChange}
+            className="block w-full p-2 border rounded"
+          />
+          <input
+            type="text"
+            name="centre"
+            placeholder="centre"
+            value={client.centre}
             onChange={handleChange}
             className="block w-full p-2 border rounded"
           />

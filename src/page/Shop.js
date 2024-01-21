@@ -7,6 +7,7 @@ import ClientsList from '../component/ClientsList'
 import EmployeList from '../component/EmployeList'
 import ProduitsStockList from '../component/ProduitsStockList'
 import PV from '../component/PV';
+import VentesList from '../component/VentesList'
 
 
 
@@ -31,6 +32,8 @@ function Shop() {
           return <ProduitsStockList />;
         case 'PV':
           return <PV />;
+        case 'ventes':
+          return <VentesList />;
         
       default:
         return null;
@@ -57,7 +60,7 @@ function Shop() {
               <h1 onClick={() => setActiveComponent('clients')} className={`shadow-inner py-3 items-center justify-center flex hover:bg-white duration-500 cursor-pointer ${activeComponent === 'clients' ? 'bg-white' : 'bg-orange-400'}`}>Liste Clients</h1>
               <h1 onClick={() => setActiveComponent('employes')} className='shadow-inner py-3 items-center justify-center flex bg-orange-400 hover:bg-white duration-500 cursor-pointer'>Liste Employes</h1>
               <h1 onClick={() => setActiveComponent('Produit')} className={`shadow-inner py-3 items-center justify-center flex hover:bg-white duration-500 cursor-pointer ${activeComponent === 'Produit' ? 'bg-white' : 'bg-orange-400'}`}>Produit</h1>
-              <h1 className='shadow-inner py-3 items-center justify-center flex bg-orange-400 hover:bg-white duration-500 cursor-pointer'>Liste </h1>
+              <h1 onClick={() => setActiveComponent('ventes')} className='shadow-inner py-3 items-center justify-center flex bg-orange-400 hover:bg-white duration-500 cursor-pointer'>Liste Ventes</h1>
               <h1 onClick={() => setActiveComponent('PV')} className={`shadow-inner py-3 items-center justify-center flex hover:bg-white duration-500 cursor-pointer ${activeComponent === 'PV' ? 'bg-white' : 'bg-orange-400'}`}>PV</h1>
        </div>
        <div>
