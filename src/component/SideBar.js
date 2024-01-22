@@ -8,7 +8,7 @@ import { FaMoneyBillTransfer } from "react-icons/fa6";
 import { MdTouchApp } from "react-icons/md";
 import { DiCoda } from "react-icons/di";
 import { GiStockpiles } from "react-icons/gi";
-
+import { MdNoTransfer } from "react-icons/md";
 
 function SideBar() {
  
@@ -28,32 +28,32 @@ function SideBar() {
        <div className=' bg-white  items-start pl-6 py-2 text-gray-600 hidden sm:flex sm:flex-col sm:w-[30%] md:w-[30%] lg:w-[20%] overflow-hidden'>
             {/* Ge-Stock */}
             <div className='flex items-center font-bold md:py-4 text-3xl Consolas'>
-              <DiCoda />
+              <DiCoda color='orange' />
               <h1 className='px-8'>GE-STOCK</h1>
             </div>
             {/* Sidebar Menu */}
             <ul className='text-xl py-16 font-mono'>
               <li className='flex py-2 items-center cursor-pointer'>
               <Link className='flex' to='/Dashboard'>
-                 <CiHome className='' size={25} />
+                 <CiHome color='orange' size={25} />
                  <h1 className='md:px-4 lg:px-14'>Dashboard</h1>
               </Link> 
               </li>
               <li className='flex py-2 items-center cursor-pointer'>
               <Link className='flex' to='/Ventes'>
-                <FcSalesPerformance size={25} />
+                <FcSalesPerformance color='orange' size={25} />
                 <h1 className='md:px-4 lg:px-14'>Ventes</h1>
               </Link>
               </li>
               <li className='flex py-2 items-center cursor-pointer'>
               <Link className='flex' to='/Achats' >
-                <TiShoppingCart size={25} />
+                <TiShoppingCart color='orange' size={25} />
                 <h1 className='md:px-4 lg:px-14'>Acahts</h1>
               </Link>
               </li>
              
               <li className='flex py-2  cursor-pointer'>
-              <FaMoneyBillTransfer  size={25} />
+              <FaMoneyBillTransfer color='orange'  size={25} />
               <div className='flex flex-col items-center'>
               <h1 onClick={toggleStakeholders} className='md:px-4 lg:px-14'>Stackholder</h1>
               {showStakeholders && (
@@ -72,7 +72,7 @@ function SideBar() {
               </div>
               </li>
               <li className='flex py-2 cursor-pointer'>
-              <FaShopSlash size={25} />
+              <FaShopSlash color='orange' size={25} />
               <div className='flex flex-col items-center'>
               <h1 onClick={toggleShops} className='md:px-4 lg:px-14'>Shops</h1>
               {showShops && (
@@ -92,13 +92,13 @@ function SideBar() {
               </li>
               <li className='flex py-2 items-center cursor-pointer'>
                 <Link className='flex' to='/Stock'>
-                  <GiStockpiles size={25} />
+                  <GiStockpiles color='orange' size={25} />
                   <h1 className='md:px-4 lg:px-14'>Stock</h1>
                 </Link>
               </li>
               <li className='flex py-2 items-center cursor-pointer'>
                 <Link className='flex' to='/Transfert'>
-                  <GiStockpiles size={25} />
+                  <MdNoTransfer color='orange' size={25} />
                   <h1 className='md:px-4 lg:px-14'>Transfert</h1>
                 </Link>
               </li>

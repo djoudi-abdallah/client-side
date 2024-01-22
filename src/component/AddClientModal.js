@@ -7,6 +7,7 @@ const AddClientModal = ({ isOpen, onClose, onSave }) => {
     adresse: '',
     telephone: '',
     credit: 0,
+    centre: '',
   };
   const [client, setClient] = useState(initialClientState);
 
@@ -68,6 +69,14 @@ const AddClientModal = ({ isOpen, onClose, onSave }) => {
             name="credit"
             placeholder="Crédit"
             value={client.credit}
+            onChange={handleChange}
+            className="block w-full p-2 border rounded"
+          />
+          <input
+            type="number"
+            name="centre"
+            placeholder="centre"
+            value={client.centre}
             onChange={handleChange}
             className="block w-full p-2 border rounded"
           />

@@ -216,7 +216,7 @@ const handleSaveSale = (saleData) => {
       {filteredVentes.map((sale , index) =>  (
        <div key={index} className='grid gap-2 grid-cols-4 md:grid-cols-7 text-center place-content-center bg-gray-400/30  w-[98%] my-2 py-3 rounded-xl justify-center'>
          <h1>{sale.produitNom}</h1>
-         <h1>{sale.client}</h1>
+         <h1>{sale.clientNom}</h1>
          <h1 className='hidden md:flex md:justify-center'>{new Date(sale.dateVente).toLocaleDateString()}</h1>
          <h1>{sale.prixUnitaire}</h1>
          <h1 className='hidden md:flex md:justify-center'>{sale.quantite}</h1>

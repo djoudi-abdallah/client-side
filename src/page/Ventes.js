@@ -111,35 +111,28 @@ useEffect(() => {
 
      
      
-const handleSaveSale = (saleData) => {
-  
-  if (currentSale) {
-   
-    axios.put(`http://localhost:3001/ventes/${currentSale.code}`, saleData)
-      .then(response => {
-
-        fetchVentes();
-        closeModal();
-      })
-      .catch(error => {
-        console.error('Error updating vente:', error);
-        
-      });
-  } else {
-
-    axios.post('http://localhost:3001/ventes', saleData)
-      .then(response => {
-        
-        fetchVentes();
-        closeModal();
-      })
-      .catch(error => {
-        console.error('Error adding vente:', error);
-        
-      });
-  }
-};
-      
+      const handleSaveSale = (saleData) => {
+        if (currentSale) {
+          axios.put(`http://localhost:3001/ventes/${currentSale.code}`, saleData)
+            .then(response => {
+              fetchVentes();
+              closeModal();
+            })
+            .catch(error => {
+              console.error('Error updating vente:', error);
+            });
+        } else {
+          axios.post('http://localhost:3001/ventes', saleData)
+            .then(response => {
+              setVentes(prevVentes => [...prevVentes, response.data]);
+              setFilteredVentes(prevFilteredVentes => [...prevFilteredVentes, response.data]);
+              closeModal();
+            })
+            .catch(error => {
+              console.error('Error adding vente:', error);
+            });
+        }
+      };
       
       
       
@@ -210,13 +203,13 @@ const handleSaveSale = (saleData) => {
          </div>   
     
       {filteredVentes.map((sale , index) =>  (
-       <div key={index} className='grid gap-2 grid-cols-4 md:grid-cols-7 text-center place-content-center bg-gray-400/30  w-[98%] my-2 py-3 rounded-xl justify-center'>
-         <h1>{sale.produit}</h1>
-         <h1>{sale.client}</h1>
+       <div key={index} className='grid gap-2 grid-cols-4 md:grid-cols-7 text-center place-content-center bg-gray-400/30 items-center  w-[98%] my-2 py-3 rounded-xl justify-center'>
+         <h1>{sale.produitNom}</h1>
+         <h1>{sale.clientNom}</h1>
          <h1 className='hidden md:flex md:justify-center'>{new Date(sale.dateVente).toLocaleDateString()}</h1>
          <h1>{sale.prixUnitaire}</h1>
          <h1 className='hidden md:flex md:justify-center'>{sale.quantite}</h1>
-         <h1 className='hidden md:flex md:justify-center'>{sale.prixUnitaire*sale.quantite}</h1>
+         <h1 className='hidden md:flex md:justify-center'>{sale.status}</h1>
      
          <div onClick={handleIconClick} className='flex items-center justify-center'>
         {isEditing ? (

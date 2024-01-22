@@ -27,6 +27,7 @@ function Transfert() {
   };
 
   const handleSaveTransfert = (updatedTransfert) => {
+    if(currentTransfert){
     axios
       .put(`http://localhost:3001/transferts/${currentTransfert.code}`, updatedTransfert)
       .then((response) => {
@@ -34,6 +35,18 @@ function Transfert() {
         setIsEditModalOpen(false);
       })
       .catch((error) => console.error('Error updating transfert:', error));
+    } else {
+      
+        axios
+          .post('http://localhost:3001/transferts', updatedTransfert)
+          .then((response) => {
+            fetchTransferts();
+            setIsEditModalOpen(false);
+          })
+          .catch((error) => {
+            console.error('Error adding employe:', error);
+          });
+      }
   };
 
   const location = useLocation();
@@ -96,7 +109,7 @@ function Transfert() {
                   isOpen={isEditModalOpen}
                   onClose={() => setIsEditModalOpen(false)}
                   onSave={handleSaveTransfert}
-                  currentTransfert={currentTransfert}
+                  updatedTransfert={currentTransfert}
                 />
 
                 <AddTransfertModal

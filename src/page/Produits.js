@@ -13,6 +13,7 @@ function Produits() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  
 
   const fetchProducts = () => {
     axios.get('http://localhost:3001/produits')
@@ -26,7 +27,7 @@ function Produits() {
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  },);
 
 
   const filteredProducts = products.filter(prd =>
@@ -60,28 +61,26 @@ function Produits() {
 
   const handleSaveProduct = (productData) => {
     if (currentProduct) {
-      axios
-        .put(`http://localhost:3001/produits/${currentProduct.code}`, productData)
-        .then(() => {
-          fetchProducts();
+      axios.put(`http://localhost:3001/produits/${currentProduct.code}`, productData)
+        .then((response) => {
+         fetchProducts();
         })
         .catch((error) => {
           console.error('Error updating product:', error);
         });
     } else {
-      axios
-        .post('http://localhost:3001/produits', productData)
-        .then(() => {
-          fetchProducts();
-        })
-        .catch((error) => {
-          console.error('Error adding product:', error);
-        });
+      axios.post('http://localhost:3001/produits', productData)
+      .then((response) => {
+        fetchProducts();
+      })
+      .catch((error) => {
+        console.error('Error adding product:', error);
+      });
     }
     setIsAddModalOpen(false);
     setIsEditModalOpen(false);
   };
-
+  
   return (
     <div className='bg-gray-300/30 w-full md:w-[77%] lg:w-[82%] overflow-y-auto'>
       <NavBar />

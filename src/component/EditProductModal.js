@@ -17,6 +17,10 @@ const EditProductModal = ({ isOpen, onClose, onSave, productData }) => {
     onSave(product);
     onClose();
   };
+  useEffect(() => {
+   
+    setProduct(JSON.parse(JSON.stringify(productData)));
+  }, [productData]);
 
   if (!isOpen) return null;
 

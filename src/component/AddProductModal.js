@@ -18,7 +18,7 @@ const AddProductModal = ({ isOpen, onClose, onSave }) => {
     e.preventDefault();
     onSave(product);
     onClose();
-    setProduct(initialProductState); // Reset the form after saving
+    setProduct(initialProductState); 
   };
 
   if (!isOpen) return null;

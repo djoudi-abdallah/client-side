@@ -67,7 +67,7 @@ function Achats() {
 
   useEffect(() => {
     fetchAchats();
-  }, []);
+  }, );
 
   const handleSavePurchase = (achatData) => {
     if (currentAchat) {

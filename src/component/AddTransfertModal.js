@@ -1,14 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const AddTransfertModal = ({ isOpen, onClose, onSave }) => {
-  const [id_produit, setIdProduit] = useState('');
-  const [centre, setCentre] = useState('');
-  const [quantite, setQuantite] = useState('');
+  const initialTransfertState = {
+    id_produit: '',
+    centre: '',
+    quantite: '',
+  };
+
+  const [transfert, setTransfert] = useState(initialTransfertState);
+  const [centres, setCentres] = useState([2, 3, 4]);
+  const [produits, setProduits] = useState([]);
+  
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setTransfert({ ...transfert, [name]: value });
+  };
+
+  const handleCentreChange = (e) => {
+    const selectedCentre = e.target.value;
+    setTransfert({ ...transfert, centre: selectedCentre });
+    
+    // Faites une requête API pour obtenir les produits en fonction du centre sélectionné
+    axios.get(`http://localhost:3001/transfertsShop/${selectedCentre}`)
+      .then(response => {
+        setProduits(response.data);
+      })
+      .catch(error => {
+        console.error('Erreur lors de la récupération des produits :', error);
+      });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave({ id_produit, centre, quantite });
+    onSave(transfert);
     onClose();
+    setTransfert(initialTransfertState);
   };
 
   if (!isOpen) return null;
@@ -19,30 +46,39 @@ const AddTransfertModal = ({ isOpen, onClose, onSave }) => {
         <form onSubmit={handleSubmit} className="space-y-4 pt-3">
           <h2 className="text-2xl font-bold">Add Transfert</h2>
           
-          <input
-            type="text"
-            name="id_produit"
-            placeholder="ID Produit"
-            value={id_produit}
-            onChange={(e) => setIdProduit(e.target.value)}
-            className="block w-full p-2 border rounded"
-          />
-
-          <input
-            type="text"
+          <select
             name="centre"
-            placeholder="Centre"
-            value={centre}
-            onChange={(e) => setCentre(e.target.value)}
+            value={transfert.centre}
+            onChange={handleCentreChange}
             className="block w-full p-2 border rounded"
-          />
+          >
+            <option value="">Sélectionnez un centre</option>
+            {centres.map((centre) => (
+              <option key={centre} value={centre}>{centre}</option>
+            ))}
+          </select>
+
+          <select
+            name="id_produit"
+            value={transfert.id_produit}
+            onChange={handleChange}
+            className="block w-full p-2 border rounded"
+          >
+            <option value="">Sélectionnez un produit</option>
+            {produits.map((produit) => (
+              <option key={produit.code} value={produit.id_produit}>
+                {produit.productDetails.name}
+                
+              </option>
+            ))}
+          </select>
 
           <input
             type="number"
             name="quantite"
             placeholder="Quantité"
-            value={quantite}
-            onChange={(e) => setQuantite(e.target.value)}
+            value={transfert.quantite}
+            onChange={handleChange}
             className="block w-full p-2 border rounded"
           />
           
