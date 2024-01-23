@@ -21,13 +21,12 @@ function Client() {
 
   const handleEditClick = (cli) => {
     setCurrentClient(cli);
-    setIsEditModalOpen(true); // Open the Edit Client Modal
+    setIsEditModalOpen(true);
   };
 
   const handleAddClick = () => {
-    setCurrentClient(null); // Set currentClient to null when adding a new client
-    setIsAddModalOpen(true); // Open the Add Client Modal
-  };
+    setCurrentClient(null); 
+    setIsAddModalOpen(true);  };
 
   const fetchClients = () => {
     axios

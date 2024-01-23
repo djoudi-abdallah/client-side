@@ -136,7 +136,7 @@ function Employee() {
               </h1>
               <h1>{emp.adresse}</h1>
               <h1 className="hidden md:flex md:justify-center">{emp.telephone}</h1>
-              <h1>{emp.salaire_jour}</h1>
+              <h1 className="hidden md:flex md:justify-center">{emp.salaire_jour}</h1>
               <h1>{emp.salaire}</h1>
               <div onClick={handleIconClick} className="flex items-center justify-center">
                 {isEditing ? (

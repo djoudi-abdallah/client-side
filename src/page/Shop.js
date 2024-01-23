@@ -8,6 +8,7 @@ import EmployeList from '../component/EmployeList'
 import ProduitsStockList from '../component/ProduitsStockList'
 import PV from '../component/PV';
 import VentesList from '../component/VentesList'
+import TopBoardcentre from '../component/TopBoardcentre';
 
 
 
@@ -16,7 +17,7 @@ function Shop() {
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search);
   const idShop = queryParams.get("id");
-  console.log(idShop);
+  
   
   const [activeComponent, setActiveComponent] = useState('');
 
@@ -50,7 +51,7 @@ function Shop() {
        <NavBar/>
        <div className=' bg-white shadow-2xl m-4 rounded-xl jus'>
           
-          <TopBoard/>
+          <TopBoardcentre centreId={idShop}/>
        </div>  
 
        <div className=' bg-white shadow-2xl m-4 rounded-xl jus'>

@@ -4,49 +4,47 @@ import { VscTrash, VscEdit, VscActivateBreakpoints } from 'react-icons/vsc';
 import { useSearchParams, useLocation } from 'react-router-dom';
 import NavBar from '../component/NavBar';
 import TopBoard from '../component/TopBoard';
-import AddTransfertModal from '../component/AddTransfertModal'; 
-import EditTransfertModal from '../component/EditTransfertModal';
+import AddMassroufModal from '../component/AddMassroufModal';
+import EditMassroufModal from '../component/EditMassroufModal';
 
-function Transfert() {
-  const [transferts, setTransferts] = useState([]);
+function Massrouf() {
+  const [massroufs, setMassroufs] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [searchParams] = useSearchParams();
-
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [currentTransfert, setCurrentTransfert] = useState(null);
+  const [currentMassrouf, setCurrentMassrouf] = useState(null);
 
-  const handleEditClick = (transfert) => {
-    setCurrentTransfert(transfert);
-    setIsEditModalOpen(true); // Open the Edit Transfert Modal
+  const handleEditClick = (massrouf) => {
+    setCurrentMassrouf(massrouf);
+    setIsEditModalOpen(true);
   };
 
   const handleAddClick = () => {
-    setCurrentTransfert(null); // Set currentTransfert to null when adding a new transfert
-    setIsAddModalOpen(true); // Open the Add Transfert Modal
+    setCurrentMassrouf(null);
+    setIsAddModalOpen(true);
   };
 
-  const handleSaveTransfert = (updatedTransfert) => {
-    if(currentTransfert){
-    axios
-      .put(`http://localhost:3001/transferts/${currentTransfert.code}`, updatedTransfert)
-      .then((response) => {
-        fetchTransferts();
-        setIsEditModalOpen(false);
-      })
-      .catch((error) => console.error('Error updating transfert:', error));
+  const handleSaveMassrouf = (updatedMassrouf) => {
+    if (currentMassrouf) {
+      axios
+        .put(`http://localhost:3001/massroufs/${currentMassrouf.code}`, updatedMassrouf)
+        .then((response) => {
+          fetchMassroufs();
+          setIsEditModalOpen(false);
+        })
+        .catch((error) => console.error('Error updating Massrouf:', error));
     } else {
-      
-        axios
-          .post('http://localhost:3001/transferts', updatedTransfert)
-          .then((response) => {
-            fetchTransferts();
-            setIsEditModalOpen(false);
-          })
-          .catch((error) => {
-            console.error('Error adding employe:', error);
-          });
-      }
+      axios
+        .post('http://localhost:3001/massroufs', updatedMassrouf)
+        .then((response) => {
+          fetchMassroufs();
+          setIsEditModalOpen(false);
+        })
+        .catch((error) => {
+          console.error('Error adding Massrouf:', error);
+        });
+    }
   };
 
   const location = useLocation();
@@ -59,29 +57,31 @@ function Transfert() {
 
   const handleDeleteClick = (code) => {
     axios
-      .delete(`http://localhost:3001/transferts/${code}`)
+      .delete(`http://localhost:3001/massroufs/${code}`)
       .then((response) => {
-        fetchTransferts();
+        fetchMassroufs();
       })
       .catch((error) => {
-        console.error('Error deleting transfert:', error);
+        console.error('Error deleting Massrouf:', error);
       });
   };
 
-  const fetchTransferts = () => {
+  const fetchMassroufs = () => {
     axios
-      .get(`http://localhost:3001/transferts`) 
+      .get(`http://localhost:3001/massroufs`)
       .then((response) => {
-        setTransferts(response.data);
+        setMassroufs(response.data);
+        console.log(response.data);
       })
       .catch((error) => {
-        console.error('Error fetching transferts:', error);
+        console.error('Error fetching Massroufs:', error);
       });
   };
 
   useEffect(() => {
-    fetchTransferts();
-  }, );
+    fetchMassroufs();
+  },);
+  
 
   return (
     <div className='bg-gray-300/30 w-full md:w-[77%] lg:w-[82%] overflow-y-auto'>
@@ -96,56 +96,53 @@ function Transfert() {
               <TopBoard />
               <div className='bg-white w-full rounded-xl shadow-2xl'>
                 <div className='flex justify-between'>
-                  <h2 className="text-xl font-serif px-10 py-6">Transferts Table:</h2>
+                  <h2 className="text-xl font-serif px-10 py-6">Massroufs Table:</h2>
                   <button
-                    onClick={handleAddClick} 
+                    onClick={handleAddClick}
                     className="bg-violet-500 text-white px-4 py-2 rounded-md my-4 mr-4"
                   >
-                    Add Transfert
+                    Add Massrouf
                   </button>
                 </div>
 
-                <EditTransfertModal
+                <EditMassroufModal
                   isOpen={isEditModalOpen}
                   onClose={() => setIsEditModalOpen(false)}
-                  onSave={handleSaveTransfert}
-                  updatedTransfert={currentTransfert}
+                  onSave={handleSaveMassrouf}
+                  updatedMassrouf={currentMassrouf}
                 />
 
-                <AddTransfertModal
+                <AddMassroufModal
                   isOpen={isAddModalOpen}
                   onClose={() => setIsAddModalOpen(false)}
-                  onSave={handleSaveTransfert}
+                  onSave={handleSaveMassrouf}
                 />
 
                 <div className='w-full flex flex-col items-center'>
-                  <div className='grid gap-2 grid-cols-4 md:grid-cols-5 text-center py-4 place-content-center justify-center w-full font-serif'>
-                    <h1 className='hidden md:flex md:justify-center'>Code transfert</h1>
-                    <h1>Produit</h1>
-                    <h1>Cout Equivalent</h1>
-                    <h1>quantite</h1>
+                  <div className='grid gap-2 grid-cols-4  text-center py-4 place-content-center justify-center w-full font-serif'>
+                    <h1 className='hidden md:flex md:justify-center'>Massrouf ID</h1>
+                    <h1>Employé</h1>
+                    <h1>Montant</h1>
                     <h1>Edit</h1>
                   </div>
 
-                  {transferts.map((trf, index) => (
+                  {massroufs.map((masrouf, index) => (
                     <div
                       key={index}
-                      className='grid gap-2  md:grid-cols-5 grid-cols-4 text-center place-content-center bg-gray-400/30 w-[98%] my-2 py-3 rounded-xl justify-center'
+                      className='grid gap-2   grid-cols-4 text-center place-content-center bg-gray-400/30 w-[98%] my-2 py-3 rounded-xl justify-center'
                     >
-                      <h1 className='hidden md:flex md:justify-center'>{trf.code}</h1>
-                      <h1><h1>{trf.productDetails ? trf.productDetails.name : 'N/A'}</h1>
-</h1>
-                      <h1>{trf.coutEquivalent}</h1>
-                      <h1>{trf.quantite}</h1>
+                      <h1 className='hidden md:flex md:justify-center'>{masrouf.code}</h1>
+                      <h1>{masrouf.employeeDetails.nom}</h1>
+                      <h1>{masrouf.amount}</h1>
                       <div onClick={handleIconClick} className='flex items-center justify-center'>
                         {isEditing ? (
                           <>
                             <VscTrash
-                              onClick={() => handleDeleteClick(trf.code)}
+                              onClick={() => handleDeleteClick(masrouf.code)}
                               className='cursor-pointer text-red-500'
                             />
                             <VscEdit
-                              onClick={() => handleEditClick(trf)}
+                              onClick={() => handleEditClick(masrouf)}
                               className='cursor-pointer text-blue-500 ml-2'
                             />
                           </>
@@ -165,4 +162,4 @@ function Transfert() {
   );
 }
 
-export default Transfert;
+export default Massrouf;

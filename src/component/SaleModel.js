@@ -48,7 +48,6 @@ const SaleModal = ({ isOpen, onClose, onSave, saleData }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-   
     setSale({ ...sale, [name]: value });
   };
   useEffect(() => {

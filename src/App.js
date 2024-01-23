@@ -12,6 +12,7 @@ import Client from "./page/Client";
 import axios from "axios";
 import Shop from "./page/Shop";
 import Transfert from "./page/Transfert";
+import Massrouf from "./page/Massrouf";
 
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
                   <Route path="/Client" element={<Client />} />
                   <Route path="/shop" element={<Shop />} />
                   <Route path="/Transfert" element={<Transfert />} />
+                  <Route path="/Massrouf" element={<Massrouf />} />
                 </Routes>
               </>
             }
