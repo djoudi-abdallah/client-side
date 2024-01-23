@@ -27,7 +27,7 @@ function SideBar() {
   
   return (
     
-       <div className=' bg-white  items-start pl-6 py-2 text-black hidden sm:flex sm:flex-col sm:w-[30%] md:w-[30%] lg:w-[20%] overflow-hidden'>
+       <div className=' bg-white  items-start pl-6 py-2 text-black hidden sm:flex sm:flex-col sm:w-[30%] md:w-[30%] lg:w-[20%] overflow-x-hidden overscroll-y-auto'>
             {/* Ge-Stock */}
             <div className='flex items-center font-bold md:py-4 text-3xl Consolas'>
               <DiCoda color='orange' />
@@ -108,6 +108,18 @@ function SideBar() {
                 <Link className='flex' to='/Massrouf'>
                   <MdOutlineAttachMoney color='orange' size={25} />
                   <h1 className='md:px-4 lg:px-14'>Massrouf</h1>
+                </Link>
+              </li>
+              <li className='flex py-2 items-center cursor-pointer'>
+                <Link className='flex' to='/Salary'>
+                  <MdOutlineAttachMoney color='orange' size={25} />
+                  <h1 className='md:px-4 lg:px-14'>Salary</h1>
+                </Link>
+              </li>
+              <li className='flex py-2 items-center cursor-pointer'>
+                <Link className='flex' to='/Absence'>
+                  <MdOutlineAttachMoney color='orange' size={25} />
+                  <h1 className='md:px-4 lg:px-14'>Absence</h1>
                 </Link>
               </li>
             </ul>

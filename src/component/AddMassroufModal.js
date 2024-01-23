@@ -68,7 +68,6 @@ const AddMassroufModal = ({ isOpen, onClose, onSave }) => {
             {employes.map((employe) => (
                 <option key={employe.code} value={employe.code}>
                 {employe.nom}
-                {console.log(employe.code)}
               </option>
             ))}
           </select>

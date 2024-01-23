@@ -13,6 +13,8 @@ import axios from "axios";
 import Shop from "./page/Shop";
 import Transfert from "./page/Transfert";
 import Massrouf from "./page/Massrouf";
+import Salary from "./page/Salary";
+import Absence from "./page/Absence";
 
 
 function App() {
@@ -49,6 +51,8 @@ function App() {
                   <Route path="/shop" element={<Shop />} />
                   <Route path="/Transfert" element={<Transfert />} />
                   <Route path="/Massrouf" element={<Massrouf />} />
+                  <Route path="/Salary" element={<Salary />} />
+                  <Route path="/Absence" element={<Absence />} />
                 </Routes>
               </>
             }
