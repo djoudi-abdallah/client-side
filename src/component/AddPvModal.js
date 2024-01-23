@@ -1,31 +1,52 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-// ... import necessary components
 
-function AddPvModal({ isOpen, onClose, onAdd }) {
-  const [date, setDate] = useState('');
-  const [contente, setContente] = useState('');
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Call API to add new PV
-    axios.post('http://localhost:3001/pvsales', { date, contente })
-      .then(response => {
-        onAdd();
-        onClose();
-      })
-      .catch(error => console.error('Error adding new PV:', error));
+const AddPvModal = ({ isOpen, onClose, onSave }) => {
+  const initialPvState = {
+   contente : '',
   };
 
+  const [pv, setPv] = useState(initialPvState);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setPv({ ...pv, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSave(pv);
+    onClose();
+    setPv(initialPvState);
+  };
+
+  if (!isOpen) return null;
+
   return (
-    <div className={isOpen ? "modal display-block" : "modal display-none"}>
-      {/* Modal content */}
-      <form onSubmit={handleSubmit}>
-        {/* Form fields for date and contente */}
-        {/* Submit button */}
-      </form>
+    <div className="fixed inset-0 bg-blue-400 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center">
+      <div className="relative bg-white p-8 rounded-2xl shadow-lg w-[90%] md:w-[40%]">
+        <form onSubmit={handleSubmit} className="space-y-4 pt-3">
+          <h2 className="text-2xl font-bold">Add PV</h2>
+          
+          <input
+            type="text"
+            name="contente"
+            placeholder="contenu"
+            value={pv.contente}
+            onChange={handleChange}
+            className="block w-full p-2 border rounded"
+          />
+
+          
+          <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+            Add
+          </button>
+        </form>
+        <button onClick={onClose} className="absolute top-0 right-0 p-4">
+          Close
+        </button>
+      </div>
     </div>
   );
-}
+};
 
 export default AddPvModal;
