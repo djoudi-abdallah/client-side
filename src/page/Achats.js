@@ -25,11 +25,28 @@ const handleEditClick = (achat) => {
       setIsEditing(!isEditing);
       
     };
-  const handleDeleteClick = ()=>{
+    const fetchAchats = () => {
+      axios.get('http://localhost:3001/achats')
+        .then(response => {
+          setAchats(response.data);
+          // setFilteredAchats(response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching ventes:', error);
+        });
+    };
 
-    console.log('deleting achat');
-  }
-  
+
+    const handleDeleteClick = (code) => {
+      axios.delete(`http://localhost:3001/achats/${code}`)
+        .then(() => {
+       
+          fetchAchats();
+        })
+        .catch(error => {
+          console.error('Error deleting vente:', error);
+        });
+    };
   const handleSaveEditedAchat = (achatData) => {
     axios
       .put(`http://localhost:3001/achats/${achatData.code}`, achatData)
@@ -53,7 +70,7 @@ const handleEditClick = (achat) => {
       .catch(error => {
         console.error("Error fetching achats:", error);
       });
-  }, []);
+  }, );
   
 
 
@@ -126,7 +143,7 @@ const handleEditClick = (achat) => {
    <div key={index} className='grid gap-2 grid-cols-4 md:grid-cols-7 text-center place-content-center bg-gray-400/30 items-center  w-[98%] my-2 py-3 rounded-xl justify-center'>
      <h1>{achat
 .fournisseurname}</h1>
-     <h1>{achat.productDetails.name
+     <h1>{achat.nom
 }</h1>
      <h1 className='hidden md:flex md:justify-center'>{new Date(achat.dateAchat).toLocaleDateString()}</h1>
      <h1 className='hidden md:flex md:justify-center'>{achat.quantite}</h1>

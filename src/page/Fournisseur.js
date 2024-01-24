@@ -5,6 +5,7 @@ import TopBoard from '../component/TopBoard';
 import AddFournisseurModal from '../component/AddFournisseurModal';
 import EditFournisseurModal from '../component/EditFournisseurModal';
 import axios from 'axios';
+import AddReglementFournisseur from '../component/AddReglementFournissuer';
 
 function Fournisseur() {
   const [fournisseurs, setFournisseurs] = useState([]);
@@ -21,12 +22,22 @@ function Fournisseur() {
         console.error('Error fetching fournisseurs:', error);
       });
   };
+
+  const [isAddReglementOpen, setIsAddReglementOpen] = useState(false);
+
+  const handleOpenAddReglement = () => {
+    setIsAddReglementOpen(true);
+  };
+
+  const handleCloseAddReglement = () => {
+    setIsAddReglementOpen(false);
+  };
   const handleIconClick = () => {
     setIsEditing(!isEditing); 
   };
   useEffect(() => {
     fetchFournisseurs();
-  }, []);
+  }, );
 
   const handleAddFournisseur = () => {
     setCurrentFournisseur(null);
@@ -62,7 +73,17 @@ function Fournisseur() {
     setIsAddModalOpen(false);
     setIsEditModalOpen(false);
   };
-
+  
+  const handleSaveReglement = (reglementData) => {
+    axios.post('http://localhost:3001/reglements', reglementData)
+      .then(response => {
+        console.log('Règlement ajouté avec succès :', response.data);
+        setIsAddReglementOpen(false);
+      })
+      .catch(error => {
+        console.error('Erreur lors de l\'ajout du règlement :', error);
+      });
+  };
   return (
     <div className='flex flex-col w-full md:w-[77%] lg:w-[80%] bg-gray-300/30 overflow-auto'>
       <NavBar/>
@@ -70,12 +91,28 @@ function Fournisseur() {
         <TopBoard/>
         <div className='flex justify-between mx-2 items-center'>
           <h2 className="text-xl font-serif p-4 pl-10">Fournisseur Table</h2>
+          <div>
+          <button
+           onClick={handleOpenAddReglement}
+            className="bg-violet-500 text-white px-4 py-2 rounded-md my-4 mr-4"
+          >
+            Add Reglement
+          </button>
+          {isAddReglementOpen && (
+        <AddReglementFournisseur
+          isOpen={isAddReglementOpen}
+          onClose={handleCloseAddReglement}
+          onSave={handleSaveReglement
+          }
+        />
+      )}
           <button
             onClick={handleAddFournisseur}
             className="bg-violet-500 text-white px-4 py-2 rounded-md my-4 mr-4"
           >
             Add Fournisseur
           </button>
+          </div>
         </div>
         <div className='w-full flex flex-col items-center'>
           <div className='grid gap-2 grid-cols-4 md:grid-cols-5 text-center py-4 place-content-center w-full font-serif'>
