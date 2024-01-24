@@ -10,7 +10,7 @@ function SaleTable() {
 
   const fetchRecentlysale = () => {
     axios
-      .get('http://localhost:3001/dashbord/recentlysale')
+      .get('http://localhost:3001/dashbord/recentlysale/1')
       .then((response) => {
         setRecentlysale(response.data);
       })
@@ -42,13 +42,11 @@ function SaleTable() {
       {recentlysale.map((sale) => (
         <div key={sale.code} className='grid gap-2 grid-cols-4 md:grid-cols-6 text-center place-content-center items-center bg-gray-400/30  w-[98%] my-2 py-3 rounded-xl justify-center'>
          <h1>{sale.code}</h1>
-         
          <h1>{sale.client}</h1>
          <h1> {new Date(sale.dateVente).toLocaleDateString()}</h1>
          <h1>{sale.quantite}</h1>
          <h1 className='hidden md:flex md:place-content-center'>{sale.montantTotal}</h1>
          <h1 className="hidden md:flex md:place-content-center">{sale.status}</h1>
-         
         </div>
       ))}</div>
      

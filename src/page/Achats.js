@@ -143,7 +143,7 @@ const handleEditClick = (achat) => {
    <div key={index} className='grid gap-2 grid-cols-4 md:grid-cols-7 text-center place-content-center bg-gray-400/30 items-center  w-[98%] my-2 py-3 rounded-xl justify-center'>
      <h1>{achat
 .fournisseurname}</h1>
-     <h1>{achat.nom
+     <h1>{achat.produitname
 }</h1>
      <h1 className='hidden md:flex md:justify-center'>{new Date(achat.dateAchat).toLocaleDateString()}</h1>
      <h1 className='hidden md:flex md:justify-center'>{achat.quantite}</h1>

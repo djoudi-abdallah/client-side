@@ -10,6 +10,8 @@ import { DiCoda } from "react-icons/di";
 import { GiStockpiles } from "react-icons/gi";
 import { MdNoTransfer } from "react-icons/md";
 import { MdOutlineAttachMoney } from "react-icons/md";
+import { GiPayMoney } from "react-icons/gi";
+import { GoEyeClosed } from "react-icons/go";
 
 
 function SideBar() {
@@ -112,13 +114,13 @@ function SideBar() {
               </li>
               <li className='flex py-2 items-center cursor-pointer'>
                 <Link className='flex' to='/Salary'>
-                  <MdOutlineAttachMoney color='orange' size={25} />
+                  <GiPayMoney color='orange' size={25} />
                   <h1 className='md:px-4 lg:px-14'>Salary</h1>
                 </Link>
               </li>
               <li className='flex py-2 items-center cursor-pointer'>
                 <Link className='flex' to='/Absence'>
-                  <MdOutlineAttachMoney color='orange' size={25} />
+                  <GoEyeClosed color='orange' size={25} />
                   <h1 className='md:px-4 lg:px-14'>Absence</h1>
                 </Link>
               </li>

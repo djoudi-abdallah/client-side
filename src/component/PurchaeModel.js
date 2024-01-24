@@ -10,7 +10,6 @@ const PurchaseModal = ({ isOpen, onClose, onSave, achatData }) => {
       quantite: "",
       statusPaiement: "",
       soldeRestant: "",
-      
       prixUnitaireHT: "",
       montantVerse: "",
     }
@@ -20,14 +19,13 @@ const PurchaseModal = ({ isOpen, onClose, onSave, achatData }) => {
     if (isOpen && achatData) {
       setPurchase(achatData);
     } else {
-      // Reset to default values when closing the modal or when no data is passed
+   
       setPurchase({
         id_fournisseur: "",
         id_produit: "",
         quantite: "",
         statusPaiement: "",
         soldeRestant: "",
-        
         prixUnitaireHT: "",
         montantVerse: "",
       });
@@ -78,7 +76,7 @@ const PurchaseModal = ({ isOpen, onClose, onSave, achatData }) => {
     getCentre();
   }, []);
 
-
+  const [isInputValid, setIsInputValid] = useState(true);
   const [errorQuantite, setErrorQuantite] = useState("");
   const [errorMontantVerse, setErrorMontantVerse] = useState("");
   const [errorPrixUnitaire, setErrorPrixUnitaire] = useState("");
@@ -92,11 +90,18 @@ const PurchaseModal = ({ isOpen, onClose, onSave, achatData }) => {
       return true;
     }
   };
+
+
+  const checkValidity = (currentPurchase) => {
+    return parseFloat(currentPurchase.quantite) >= 0 &&
+           parseFloat(currentPurchase.montantVerse) >= 0 &&
+           parseFloat(currentPurchase.prixUnitaire) >= 0;
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
    
     let error = ""; 
-
+   
   
   if (name === "quantite" || name === "montantVerse" || name === "prixUnitaire") {
     if (name === "quantite" && parseFloat(value) < 0) {
@@ -159,6 +164,8 @@ const PurchaseModal = ({ isOpen, onClose, onSave, achatData }) => {
       setPurchase({ ...purchase, [name]: value });
     }
   };
+  const isFormValid = !errorQuantite && !errorPrixUnitaire && !errorMontantVerse;
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -236,7 +243,7 @@ const PurchaseModal = ({ isOpen, onClose, onSave, achatData }) => {
           
           
           <select
-            name="statusPaiement" // Update the name attribute to match the field name
+            name="statusPaiement" 
             value={purchase.statusPaiment}
             onChange={handleChange}
             className="block w-full p-2 border rounded"
@@ -247,9 +254,13 @@ const PurchaseModal = ({ isOpen, onClose, onSave, achatData }) => {
             <option value="Entièrement payé">Entièrement payé</option>
           </select>
 
-          <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-            Enregistrer
-          </button>
+          <button  
+          type="submit" 
+          className={`p-2 rounded text-white ${isFormValid ? 'bg-blue-500' : 'bg-red-500 cursor-not-allowed'}`}
+          disabled={!isFormValid}
+        >
+          Enregistrer
+        </button>
         </form>
         <button onClick={onClose} className="absolute top-0 right-0 p-4">
           Fermer
