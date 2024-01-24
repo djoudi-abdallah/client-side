@@ -84,6 +84,7 @@ useEffect(() => {
 
     const handleIconClick = () => {
         setIsEditing(!isEditing);
+        
       };
 
       const closeModal = () => {

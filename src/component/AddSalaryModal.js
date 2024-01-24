@@ -52,7 +52,7 @@ const AddSalaryModal = ({ isOpen, onClose, onSave }) => {
             <option value="">Select an employee</option>
             {employees.map((employeID) => (
                 <option key={employeID.code} value={employeID.code}>
-                {employeID}
+                {employeID.nom}
               </option>
             ))}
           </select>

@@ -10,7 +10,7 @@ const PurchaseModal = ({ isOpen, onClose, onSave, achatData }) => {
       quantite: "",
       statusPaiement: "",
       soldeRestant: "",
-      centre: "",
+      
       prixUnitaireHT: "",
       montantVerse: "",
     }
@@ -27,7 +27,7 @@ const PurchaseModal = ({ isOpen, onClose, onSave, achatData }) => {
         quantite: "",
         statusPaiement: "",
         soldeRestant: "",
-        centre: "",
+        
         prixUnitaireHT: "",
         montantVerse: "",
       });
@@ -39,7 +39,7 @@ const PurchaseModal = ({ isOpen, onClose, onSave, achatData }) => {
   const getRequest = async () => {
     try {
       const response = await axios.get("http://localhost:3001/produits/");
-      setProducts(response.data); // Update products state
+      setProducts(response.data); 
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -54,7 +54,7 @@ const PurchaseModal = ({ isOpen, onClose, onSave, achatData }) => {
   const getFournisseurs = async () => {
     try {
       const response = await axios.get("http://localhost:3001/fournisseurs/");
-      setFournisseurs(response.data); // Update fournisseurs state
+      setFournisseurs(response.data); 
     } catch (error) {
       console.error("Error fetching fournisseurs:", error);
     }
@@ -78,8 +78,49 @@ const PurchaseModal = ({ isOpen, onClose, onSave, achatData }) => {
     getCentre();
   }, []);
 
+
+  const [errorQuantite, setErrorQuantite] = useState("");
+  const [errorMontantVerse, setErrorMontantVerse] = useState("");
+  const [errorPrixUnitaire, setErrorPrixUnitaire] = useState("");
+
+  const validateNumberInput = (value, setError) => {
+    if (value < 0) {
+      setError("Ce n'est pas valide");
+      return false;
+    } else {
+      setError("");
+      return true;
+    }
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
+   
+    let error = ""; 
+
+  
+  if (name === "quantite" || name === "montantVerse" || name === "prixUnitaire") {
+    if (name === "quantite" && parseFloat(value) < 0) {
+      error = "Quantité ne peut pas être négative";
+    } else if (name === "montantVerse" && parseFloat(value) < 0) {
+      error = "Montant versé ne peut pas être négatif";
+    } else if (name === "prixUnitaire" && parseFloat(value) < 0) {
+      error = "Prix unitaire ne peut pas être négatif";
+    }
+  }
+
+  switch (name) {
+    case "quantite":
+      setErrorQuantite(error);
+      break;
+    case "montantVerse":
+      setErrorMontantVerse(error);
+      break;
+    case "prixUnitaire":
+      setErrorPrixUnitaire(error);
+      break;
+    default:
+      break;
+  }
 
     if (name === "produit") {
       const selectedProduct = products.find(
@@ -88,7 +129,7 @@ const PurchaseModal = ({ isOpen, onClose, onSave, achatData }) => {
       if (selectedProduct) {
         setPurchase({
           ...purchase,
-          id_produit: value, // Use the product code here
+          id_produit: value, 
           prixUnitaireHT: selectedProduct.price.toString(),
         });
       } else {
@@ -105,14 +146,13 @@ const PurchaseModal = ({ isOpen, onClose, onSave, achatData }) => {
       if (selectedFournisseur) {
         setPurchase({
           ...purchase,
-          id_fournisseur: value, // Use the fournisseur code here
-          // other fournisseur related data
+          id_fournisseur: value, 
         });
       } else {
         setPurchase({
           ...purchase,
           id_fournisseur: value,
-          // Reset or adjust other fournisseur related data
+        
         });
       }
     } else {
@@ -140,6 +180,7 @@ const PurchaseModal = ({ isOpen, onClose, onSave, achatData }) => {
             onChange={handleChange}
             className="block w-full p-2 border rounded"
           >
+             <option value="">Select Fournisseur</option>
             {fournisseurs.map((fournisseur) => (
               <option key={fournisseur.code} value={fournisseur.code}>
                 {fournisseur.nom}
@@ -153,57 +194,55 @@ const PurchaseModal = ({ isOpen, onClose, onSave, achatData }) => {
             onChange={handleChange}
             className="block w-full p-2 border rounded"
           >
+            <option value="">Select Product</option>
             {products.map((produit) => (
               <option key={produit.code} value={produit.code}>
                 {produit.name}
               </option>
             ))}
           </select>
-          <select
-            name="centre"
-            value={purchase.centre}
-            onChange={handleChange}
-            className="block w-full p-2 border rounded"
-          >
-            {centres.map((centre) => (
-              <option key={centre.code} value={centre.code}>
-                {centre.name}
-              </option>
-            ))}
-          </select>
+         
 
           <input
-            type="number"
-            name="quantite"
-            placeholder="Quantité"
-            value={purchase.quantite}
-            onChange={handleChange}
-            className="block w-full p-2 border rounded"
-          />
-          <input
-            type="number"
-            name="prixUnitaire"
-            placeholder="Prix Unitaire"
-            value={purchase.prixUnitaireHT}
-            onChange={handleChange}
-            className="block w-full p-2 border rounded text-gray-500"
-            readOnly
-          />
-          <input
-            type="number"
-            name="montantVerse"
-            placeholder="Montant Versé"
-            value={purchase.montantVerse}
-            onChange={handleChange}
-            className="block w-full p-2 border rounded"
-          />
+        type="number"
+        name="quantite"
+        placeholder="Quantité"
+        value={purchase.quantite}
+        onChange={handleChange}
+        className="block w-full p-2 border rounded"
+      />
+      {errorQuantite && <p className="text-red-500">{errorQuantite}</p>}
+
+      <input
+      type="number"
+      name="prixUnitaire"
+      placeholder="Prix Unitaire"
+      value={purchase.prixUnitaire}
+      onChange={handleChange}
+      className="block w-full p-2 border rounded"
+    />
+    {errorPrixUnitaire && <p className="text-red-500">{errorPrixUnitaire}</p>}
+    
+
+      <input
+        type="number"
+        name="montantVerse"
+        placeholder="Montant Versé"
+        value={purchase.montantVerse}
+        onChange={handleChange}
+        className="block w-full p-2 border rounded"
+      />
+      {errorMontantVerse && <p className="text-red-500">{errorMontantVerse}</p>}
+          
+          
           <select
             name="statusPaiement" // Update the name attribute to match the field name
             value={purchase.statusPaiment}
             onChange={handleChange}
             className="block w-full p-2 border rounded"
           >
-            <option value="Non payé">Non payé</option>
+             <option value="">Select product</option>
+            <option value="Non payé">Non payé</option>  
             <option value="Partiellement payé">Partiellement payé</option>
             <option value="Entièrement payé">Entièrement payé</option>
           </select>
