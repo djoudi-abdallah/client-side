@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const EditMassroufModal = ({ isOpen, onClose, onSave, currentMassrouf }) => {
   const [amount, setAmount] = useState(0);
+  const [isAmountValid, setIsAmountValid] = useState(true);
 
   useEffect(() => {
     if (currentMassrouf) {
@@ -9,10 +10,18 @@ const EditMassroufModal = ({ isOpen, onClose, onSave, currentMassrouf }) => {
     }
   }, [currentMassrouf]);
 
+  const handleAmountChange = (e) => {
+    const newAmount = parseInt(e.target.value);
+    setAmount(newAmount);
+    setIsAmountValid(!isNaN(newAmount) && newAmount >= 0);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave({ ...currentMassrouf, amount });
-    onClose();
+    if (isAmountValid) {
+      onSave({ ...currentMassrouf, amount });
+      onClose();
+    }
   };
 
   if (!isOpen) return null;
@@ -27,10 +36,22 @@ const EditMassroufModal = ({ isOpen, onClose, onSave, currentMassrouf }) => {
             name="amount"
             placeholder="Amount"
             value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className="block w-full p-2 border rounded"
+            onChange={handleAmountChange}
+            className={`block w-full p-2 border rounded ${
+              !isAmountValid ? 'bg-white' : ''
+            }`}
           />
-          <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+          {!isAmountValid && (
+            <p className="text-red-500">Le montant doit être supérieur ou égal à 0</p>
+          )}
+
+          <button
+            type="submit"
+            className={`bg-blue-500 text-white p-2 rounded ${
+              !isAmountValid ? 'bg-red-500 cursor-not-allowed' : ''
+            }`}
+            disabled={!isAmountValid}
+          >
             Update
           </button>
         </form>

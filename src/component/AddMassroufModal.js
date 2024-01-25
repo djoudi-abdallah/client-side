@@ -11,17 +11,17 @@ const AddMassroufModal = ({ isOpen, onClose, onSave }) => {
   const [massrouf, setMassrouf] = useState(initialMassroufState);
   const [centres, setCentres] = useState([1, 2, 3, 4]);
   const [employes, setEmployes] = useState([]);
+  const [isAmountValid, setIsAmountValid] = useState(true);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setMassrouf({ ...massrouf, [name]: value });
   };
-  
+
   const handleCentreChange = (e) => {
     const selectedCentre = e.target.value;
     setMassrouf({ ...massrouf, centre: selectedCentre });
 
-    
     axios.get(`http://localhost:3001/employes/${selectedCentre}`)
       .then(response => {
         setEmployes(response.data);
@@ -31,11 +31,19 @@ const AddMassroufModal = ({ isOpen, onClose, onSave }) => {
       });
   };
 
+  const handleAmountChange = (e) => {
+    const newAmount = parseInt(e.target.value);
+    setMassrouf({ ...massrouf, amount: newAmount });
+    setIsAmountValid(!isNaN(newAmount) && newAmount >= 0);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(massrouf);
-    onClose();
-    setMassrouf(initialMassroufState);
+    if (isAmountValid) {
+      onSave(massrouf);
+      onClose();
+      setMassrouf(initialMassroufState);
+    }
   };
 
   if (!isOpen) return null;
@@ -45,7 +53,7 @@ const AddMassroufModal = ({ isOpen, onClose, onSave }) => {
       <div className="relative bg-white p-8 rounded-2xl shadow-lg w-[90%] md:w-[40%]">
         <form onSubmit={handleSubmit} className="space-y-4 pt-3">
           <h2 className="text-2xl font-bold">Add Massrouf</h2>
-          
+
           <select
             name="centre"
             value={massrouf.centre}
@@ -61,12 +69,12 @@ const AddMassroufModal = ({ isOpen, onClose, onSave }) => {
           <select
             name="employe"
             value={massrouf.employe}
-            onChange={ handleChange}
+            onChange={handleChange}
             className="block w-full p-2 border rounded"
           >
             <option value="">Sélectionnez un employé</option>
             {employes.map((employe) => (
-                <option key={employe.code} value={employe.code}>
+              <option key={employe.code} value={employe.code}>
                 {employe.nom}
               </option>
             ))}
@@ -77,11 +85,22 @@ const AddMassroufModal = ({ isOpen, onClose, onSave }) => {
             name="amount"
             placeholder="Amount"
             value={massrouf.amount}
-            onChange={handleChange}
-            className="block w-full p-2 border rounded"
+            onChange={handleAmountChange}
+            className={`block w-full p-2 border rounded ${
+              !isAmountValid ? 'bg-white' : ''
+            }`}
           />
-          
-          <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+          {!isAmountValid && (
+            <p className="text-red-500">Le montant doit être supérieur ou égal à 0</p>
+          )}
+
+          <button
+            type="submit"
+            className={`bg-blue-500 text-white p-2 rounded ${
+              !isAmountValid ? 'bg-red-500 cursor-not-allowed' : ''
+            }`}
+            disabled={!isAmountValid}
+          >
             Add
           </button>
         </form>

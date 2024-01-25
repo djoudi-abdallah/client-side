@@ -1,41 +1,67 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const AddTransfertModal = ({ isOpen, onClose, onSave }) => {
-  const initialTransfertState = {
-    id_produit: '',
-    centre: '',
+const AddTransfert = ({ isOpen, onClose, onSave }) => {
+  const [transfert, setTransfert] = useState({
+    produit: '',
     quantite: '',
-  };
-
-  const [transfert, setTransfert] = useState(initialTransfertState);
-  const [centres, setCentres] = useState([2, 3, 4]);
+  });
+  const [errorQuantite, setErrorQuantite] = useState('');
   const [produits, setProduits] = useState([]);
-  
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setTransfert({ ...transfert, [name]: value });
-  };
+  const [selectedProduitQuantite, setSelectedProduitQuantite] = useState(null);
 
-  const handleCentreChange = (e) => {
-    const selectedCentre = e.target.value;
-    setTransfert({ ...transfert, centre: selectedCentre });
-    
-    // Faites une requête API pour obtenir les produits en fonction du centre sélectionné
-    axios.get(`http://localhost:3001/transfertsShop/${selectedCentre}`)
+  const fetchProduits = (centreId) => {
+    axios.get(`http://localhost:3001/produitStockShop/${centreId}`)
       .then(response => {
         setProduits(response.data);
       })
       .catch(error => {
-        console.error('Erreur lors de la récupération des produits :', error);
+        console.error('Error fetching produits:', error);
       });
   };
 
+  useEffect(() => {
+    if (transfert.centre) {
+      fetchProduits(transfert.centre);
+    }
+  }, [transfert.centre]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === 'centre') {
+      setProduits([]); 
+      setTransfert({ ...transfert, centre: value, produit: '' }); 
+    } else if (name === 'produit') {
+      const selectedProduit = produits.find(prod => prod.code == value);
+      console.log(selectedProduit);
+      if (selectedProduit) {
+        setSelectedProduitQuantite(selectedProduit.quantite);
+      } else {
+        setSelectedProduitQuantite(null);
+      }
+    } else if (name === 'quantite') {
+      const quantiteValue = parseFloat(value);
+      if (quantiteValue <= 0 || (selectedProduitQuantite !== null && quantiteValue > selectedProduitQuantite)) {
+        setErrorQuantite("La quantité demandée doit être supérieure à 0 et inférieure ou égale à la quantité disponible du produit");
+      } else {
+        setErrorQuantite('');
+      }
+    }
+
+    setTransfert({ ...transfert, [name]: value });
+  };
+  const isFormValid = errorQuantite === '' &&
+                      transfert.produit &&
+                      parseFloat(transfert.quantite) > 0 &&
+                      (selectedProduitQuantite === null || parseFloat(transfert.quantite) <= selectedProduitQuantite);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(transfert);
-    onClose();
-    setTransfert(initialTransfertState);
+    if (isFormValid) {
+      onSave(transfert);
+      onClose();
+    }
   };
 
   if (!isOpen) return null;
@@ -44,31 +70,33 @@ const AddTransfertModal = ({ isOpen, onClose, onSave }) => {
     <div className="fixed inset-0 bg-blue-400 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center">
       <div className="relative bg-white p-8 rounded-2xl shadow-lg w-[90%] md:w-[40%]">
         <form onSubmit={handleSubmit} className="space-y-4 pt-3">
-          <h2 className="text-2xl font-bold">Add Transfert</h2>
+          <h2 className="text-2xl font-bold">Ajouter un Transfert</h2>
+          
           
           <select
             name="centre"
             value={transfert.centre}
-            onChange={handleCentreChange}
-            className="block w-full p-2 border rounded"
-          >
-            <option value="">Sélectionnez un centre</option>
-            {centres.map((centre) => (
-              <option key={centre} value={centre}>{centre}</option>
-            ))}
-          </select>
-
-          <select
-            name="id_produit"
-            value={transfert.id_produit}
             onChange={handleChange}
             className="block w-full p-2 border rounded"
           >
-            <option value="">Sélectionnez un produit</option>
-            {produits.map((produit) => (
-              <option key={produit.code} value={produit.id_produit}>
-                {produit.productDetails.name}
-                
+            <option value="">Sélectionner un centre</option>
+            <option value={1}>Centre 1</option>
+            <option value={2}>Centre 2</option>
+            <option value={3}>Centre 3</option>
+            <option value={4}>Centre 4</option>
+          </select>
+          
+          <select
+            name="produit"
+            value={transfert.produit}
+            onChange={handleChange}
+            className="block w-full p-2 border rounded"
+          >
+            <option value="">Sélectionner un produit</option>
+            {produits.map((prod, index) => (
+              <option key={index} value={prod.code}>
+                {prod.produitDetails.name}
+                {/* {console.log(prod)} */}
               </option>
             ))}
           </select>
@@ -81,17 +109,22 @@ const AddTransfertModal = ({ isOpen, onClose, onSave }) => {
             onChange={handleChange}
             className="block w-full p-2 border rounded"
           />
-          
-          <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-            Add
+          {errorQuantite && <p className="text-red-500">{errorQuantite}</p>}
+
+          <button  
+            type="submit" 
+            className={`p-2 rounded text-white ${isFormValid ? 'bg-blue-500' : 'bg-red-500 cursor-not-allowed'}`}
+            disabled={!isFormValid}
+          >
+            Enregistrer
           </button>
         </form>
         <button onClick={onClose} className="absolute top-0 right-0 p-4">
-          Close
+          Fermer
         </button>
       </div>
     </div>
   );
 };
 
-export default AddTransfertModal;
+export default AddTransfert;

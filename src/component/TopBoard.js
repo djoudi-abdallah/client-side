@@ -52,7 +52,7 @@ function TopBoard() {
         <div>
           <h1>Top Fournisseur</h1>
           <span className='font-bold'>{topData.topSupplier.nom}</span>
-          {console.log(topData)}
+        
         </div> 
       </div>
 

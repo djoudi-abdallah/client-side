@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const EditTransfertModal = ({ isOpen, onClose, onSave, currentTransfert }) => {
   const [quantite, setQuantite] = useState(0);
+  const [isQuantiteValid, setIsQuantiteValid] = useState(true);
 
   useEffect(() => {
     if (currentTransfert) {
@@ -11,8 +12,16 @@ const EditTransfertModal = ({ isOpen, onClose, onSave, currentTransfert }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave({ ...currentTransfert, quantite });
-    onClose();
+    if (isQuantiteValid) {
+      onSave({ ...currentTransfert, quantite });
+      onClose();
+    }
+  };
+
+  const handleQuantiteChange = (e) => {
+    const newQuantite = parseInt(e.target.value);
+    setQuantite(newQuantite);
+    setIsQuantiteValid(!isNaN(newQuantite) && newQuantite >= 0);
   };
 
   if (!isOpen) return null;
@@ -27,10 +36,21 @@ const EditTransfertModal = ({ isOpen, onClose, onSave, currentTransfert }) => {
             name="quantite"
             placeholder="Quantité"
             value={quantite}
-            onChange={(e) => setQuantite(e.target.value)}
-            className="block w-full p-2 border rounded"
+            onChange={handleQuantiteChange}
+            className={`block w-full p-2 border rounded ${
+              !isQuantiteValid ? 'bg-white' : ''
+            }`}
           />
-          <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+          {!isQuantiteValid && (
+            <p className="text-red-500">La quantité doit être supérieure ou égale à 0</p>
+          )}
+          <button
+            type="submit"
+            className={`bg-blue-500 text-white p-2 rounded ${
+              !isQuantiteValid ? 'bg-red-500 cursor-not-allowed' : ''
+            }`}
+            disabled={!isQuantiteValid}
+          >
             Update
           </button>
         </form>

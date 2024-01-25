@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from 'react';
 
-
 const EditSalaryModal = ({ isOpen, onClose, onSave, updatedSalary }) => {
   const [salary, setSalary] = useState(updatedSalary || {});
+  const [isSalaryValid, setIsSalaryValid] = useState(true);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setSalary({ ...salary, [name]: value });
+    if (name === 'salary') {
+      const newSalary = parseInt(value);
+      setIsSalaryValid(!isNaN(newSalary) && newSalary >= 0);
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(salary);
-    onClose();
+    if (isSalaryValid) {
+      onSave(salary);
+      onClose();
+    }
   };
 
   useEffect(() => {
@@ -30,13 +36,24 @@ const EditSalaryModal = ({ isOpen, onClose, onSave, updatedSalary }) => {
           <input
             type="number"
             name="salary"
-            placeholder="salary"
+            placeholder="Salary"
             value={salary.salary || ''}
             onChange={handleChange}
-            className="block w-full p-2 border rounded"
+            className={`block w-full p-2 border rounded ${
+              !isSalaryValid ? 'bg-red-100' : ''
+            }`}
           />
+          {!isSalaryValid && (
+            <p className="text-red-500">The salary must be greater than or equal to 0</p>
+          )}
 
-          <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+          <button
+            type="submit"
+            className={`bg-blue-500 text-white p-2 rounded ${
+              !isSalaryValid ? 'bg-red-500 cursor-not-allowed' : ''
+            }`}
+            disabled={!isSalaryValid}
+          >
             Save
           </button>
         </form>
