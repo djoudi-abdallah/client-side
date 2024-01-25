@@ -5,7 +5,7 @@ const AddFournisseurModal = ({ isOpen, onClose, onSave }) => {
     nom: '',
     prenom: '',
     adresse: '',
-    telephone: '',
+    telephoneSuffix: '',
   };
   const [fournisseur, setFournisseur] = useState(initialFournisseurState);
 
@@ -19,6 +19,15 @@ const AddFournisseurModal = ({ isOpen, onClose, onSave }) => {
     onSave(fournisseur);
     onClose();
     setFournisseur(initialFournisseurState);
+  };
+  const [telephoneSuffix, setTelephoneSuffix] = useState('');
+
+  const handleTelephoneChange = (event) => {
+    const value = event.target.value.replace(/^\+213/, '');
+    if (/^\d*$/.test(value)) {
+      setTelephoneSuffix(value);
+      setFournisseur({ ...fournisseur, telephone: "+213" + value });
+    }
   };
 
   if (!isOpen) return null;
@@ -53,14 +62,14 @@ const AddFournisseurModal = ({ isOpen, onClose, onSave }) => {
             onChange={handleChange}
             className="block w-full p-2 border rounded"
           />
-          <input
-            type="text"
-            name="telephone"
-            placeholder="Numéro de Téléphone"
-            value={fournisseur.telephone}
-            onChange={handleChange}
-            className="block w-full p-2 border rounded"
-          />
+        <input
+                 type="tel"
+                 name="telephone"
+                 placeholder="Numéro de Téléphone"
+                 value={"+213" + telephoneSuffix}
+                 onChange={handleTelephoneChange}
+                 className="block w-full p-2 border rounded"
+               />
           <button type="submit" className="bg-blue-500 text-white p-2 rounded">
             Enregistrer
           </button>

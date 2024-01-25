@@ -11,7 +11,7 @@ const EditFournisseurModal = ({ isOpen, onClose, onSave, fournisseurData }) => {
         nom: '',
         prenom: '',
         adresse: '',
-        telephone: '',
+        telephoneSuffix: '',
       });
     }
   }, [fournisseurData]);
@@ -20,6 +20,16 @@ const EditFournisseurModal = ({ isOpen, onClose, onSave, fournisseurData }) => {
     const { name, value } = e.target;
     setFournisseur({ ...fournisseur, [name]: value });
   };
+  const handleTelephoneChange = (event) => {
+    const value = event.target.value.replace(/^\+213/, '');
+    if (/^\d*$/.test(value)) {
+      setTelephoneSuffix(value);
+      setFournisseur({ ...fournisseur, telephone: "+213" + value });
+    }
+  };
+  
+  const [telephoneSuffix, setTelephoneSuffix] = useState('');
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -60,13 +70,13 @@ const EditFournisseurModal = ({ isOpen, onClose, onSave, fournisseurData }) => {
             className="block w-full p-2 border rounded"
           />
           <input
-            type="text"
-            name="telephone"
-            placeholder="Numéro de Téléphone"
-            value={fournisseur.telephone}
-            onChange={handleChange}
-            className="block w-full p-2 border rounded"
-          />
+                 type="tel"
+                 name="telephone"
+                 placeholder="Numéro de Téléphone"
+                 value={"+213" + telephoneSuffix}
+                 onChange={handleTelephoneChange}
+                 className="block w-full p-2 border rounded"
+               />
           <button type="submit" className="bg-blue-500 text-white p-2 rounded">
             Mettre à jour
           </button>

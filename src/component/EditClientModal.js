@@ -12,7 +12,7 @@ const EditClientModal = ({ isOpen, onClose, onSave, clientData }) => {
         prenom: '',
         adresse: '',
         telephone: '',
-        credit: 0,
+        
       });
     }
   }, [clientData]);
@@ -69,14 +69,7 @@ const EditClientModal = ({ isOpen, onClose, onSave, clientData }) => {
             onChange={handleChange}
             className="block w-full p-2 border rounded"
           />
-          <input
-            type="number"
-            name="credit"
-            placeholder="Crédit"
-            value={client.credit}
-            onChange={handleChange}
-            className="block w-full p-2 border rounded"
-          />
+         
           <button type="submit" className="bg-blue-500 text-white p-2 rounded">
             Mettre à jour
           </button>

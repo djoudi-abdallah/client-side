@@ -1,4 +1,3 @@
-// SaleModal.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -10,12 +9,15 @@ const SaleModal = ({ isOpen, onClose, onSave, saleData }) => {
     quantite: '',
     prixUnitaire: '',
     montantEncaisse: '',
-    status: 'Non payé',
+    status: '',
   });
   const [clients, setClients] = useState([]);
   const [selectedCenter, setSelectedCenter] = useState('');
   const [produits, setProduits] = useState([]);
-  
+  const [isQuantiteValid, setIsQuantiteValid] = useState(true);
+  const [isMontantValid, setIsMontantValid] = useState(true);
+  const [isPriceValid, setIsPriceValid] = useState(true);
+
   useEffect(() => {
     if (selectedCenter !== '') {
       axios.get(`http://localhost:3001/clients/${selectedCenter}`)
@@ -46,12 +48,34 @@ const SaleModal = ({ isOpen, onClose, onSave, saleData }) => {
     }
   }, [saleData]);
 
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === 'prixUnitaire') {
+      const prixUnitaireValue = parseFloat(value);
+      setIsPriceValid(!isNaN(prixUnitaireValue) && prixUnitaireValue >= 0);
+    }
+    if (name === 'produit') {
+      const selectedProductData = produits.find((p) => p.produit === value);
+      setSelectedProduct(selectedProductData);
+    }
+
+    if (name === 'quantite') {
+      const quantiteValue = parseInt(value);
+      setIsQuantiteValid(!isNaN(quantiteValue) && quantiteValue >= 0);
+    }
+
+    if (name === 'montantEncaisse') {
+      const montantValue = parseInt(value);
+      setIsMontantValid(!isNaN(montantValue) && montantValue >= 0);
+    }
+
     setSale({ ...sale, [name]: value });
   };
+
   useEffect(() => {
-    
     axios.get(`http://localhost:3001/produitStockShop/${selectedCenter}`)
       .then(response => {
         setProduits(response.data);
@@ -60,6 +84,7 @@ const SaleModal = ({ isOpen, onClose, onSave, saleData }) => {
         console.error('Erreur lors de la récupération des produits :', error);
       });
   }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave(sale);
@@ -103,20 +128,16 @@ const SaleModal = ({ isOpen, onClose, onSave, saleData }) => {
               </option>
             ))}
           </select>
-          
+
           <select
             name="produit"
-
             value={sale.produit}
             onChange={handleChange}
             className="block w-full p-2 border rounded"
           >
             <option value="">Sélectionnez un produit</option>
-            {
-            
-            produits.map((produit) => (
+            {produits.map((produit) => (
               <option key={produit.code} value={produit.produit}>
-                
                 {produit.produitDetails.name}
               </option>
             ))}
@@ -128,24 +149,38 @@ const SaleModal = ({ isOpen, onClose, onSave, saleData }) => {
             placeholder="Quantité"
             value={sale.quantite}
             onChange={handleChange}
-            className="block w-full p-2 border rounded"
+            className={`block w-full p-2 border rounded ${
+              !isQuantiteValid ? 'bg-red-100' : ''
+            }`}
           />
-          <input
-            type="number"
-            name="prixUnitaire"
-            placeholder="Prix Unitaire"
-            value={sale.prixUnitaire}
-            onChange={handleChange}
-            className="block w-full p-2 border rounded"
-          />
+          {!isQuantiteValid && (
+            <p className="text-red-500">La quantité doit être supérieure ou égale à 0</p>
+          )}
+
+<input
+  type="number"
+  name="prixUnitaire" 
+  placeholder="Prix Unitaire"
+  value={sale.prixUnitaire}
+  onChange={handleChange}
+  className={`block w-full p-2 border rounded ${
+    !isPriceValid ? 'bg-white' : ''
+  }`}
+/>
+
           <input
             type="number"
             name="montantEncaisse"
             placeholder="Montant Encaissé"
             value={sale.montantEncaisse}
             onChange={handleChange}
-            className="block w-full p-2 border rounded"
+            className={`block w-full p-2 border rounded ${
+              !isMontantValid ? 'bg-white' : ''
+            }`}
           />
+          {!isMontantValid && (
+            <p className="text-red-500">Le montant encaissé doit être supérieur ou égal à 0</p>
+          )}
 
           <select
             name="status"
@@ -153,11 +188,19 @@ const SaleModal = ({ isOpen, onClose, onSave, saleData }) => {
             onChange={handleChange}
             className="block w-full p-2 border rounded"
           >
+            <option value="Non payé">select status</option>
             <option value="Non payé">Non payé</option>
             <option value="Partiellement payé">Partiellement payé</option>
             <option value="Entièrement payé">Entièrement payé</option>
           </select>
-          <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+
+          <button
+            type="submit"
+            className={`bg-blue-500 text-white p-2 rounded ${
+              !isQuantiteValid || !isMontantValid || !isPriceValid ? 'bg-red-500 cursor-not-allowed' : ''
+            }`}
+            disabled={!isQuantiteValid || !isMontantValid || !isPriceValid }
+          >
             Enregistrer
           </button>
         </form>

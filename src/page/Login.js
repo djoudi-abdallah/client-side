@@ -20,12 +20,10 @@ function Login() {
    const navigate = useNavigate();
 
    const handleLogin = () => {
-      // For simplicity, hardcoding the correct email and password.
       const correctEmail = 'diaakad19@gmail.com';
       const correctPassword = 'diaakadri';
   
       if (email === correctEmail && password === correctPassword) {
-        // Redirect to the main page after successful login
         cookies.set('token','1', { expires: 7 });
         navigate('/Dashboard');
       } else {
@@ -53,7 +51,7 @@ function Login() {
                     {/* password input */}
                     <div className='my-3 flex flex-col'>
                         <label for="name" className='font-[500]'>password</label> 
-                        <input onChange={(e) => setPassword(e.target.value)} className='my-2 border-[1px] p-2 border-gray-300 rounded ' type="text" placeholder='Enter password'/>
+                        <input onChange={(e) => setPassword(e.target.value)} className='my-2 border-[1px] p-2 border-gray-300 rounded ' type="password" placeholder='Enter password'/>
                      </div>
 
                 </div>

@@ -22,8 +22,29 @@ const EditEmployeModal = ({ isOpen, onClose, onSave, employeData }) => {
       }, [employeData]);
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const updatedValue = name === 'salaire_jour' ? parseFloat(value) : value;
-    setEmploye({ ...employe, [name]: updatedValue });
+   
+    switch (name) {
+      case "salaire_jour":
+        if (parseFloat(value) < 0) {
+          setErrorSalaire("Salaire ne peut pas être négatif");
+        } else {
+          setErrorSalaire(""); 
+        }
+        setEmploye({ ...employe, [name]: value });
+        break;
+      default:
+        setEmploye({ ...employe, [name]: value });
+        break;
+    }
+  };
+  const [telephoneSuffix, setTelephoneSuffix] = useState('');
+
+  const handleTelephoneChange = (event) => {
+    const value = event.target.value.replace(/^\+213/, '');
+    if (/^\d*$/.test(value)) {
+      setTelephoneSuffix(value);
+      setEmploye({ ...employe, telephone: "+213" + value });
+    }
   };
 
   const handleSubmit = (e) => {
@@ -31,8 +52,10 @@ const EditEmployeModal = ({ isOpen, onClose, onSave, employeData }) => {
     onSave(employe);
     onClose();
   };
+  const [errorSalaire, setErrorSalaire] = useState("");
   if (!isOpen) return null;
   const isEditMode = employeData && Object.keys(employeData).length > 0;
+  const isFormValid = !errorSalaire ;
 
 
   return (
@@ -68,23 +91,23 @@ const EditEmployeModal = ({ isOpen, onClose, onSave, employeData }) => {
 />
 
 <input
-  type="text"
-  name="telephone"
-  placeholder="Numéro de Téléphone"
-  value={employe.telephone}
-  onChange={handleChange}
-  className="block w-full p-2 border rounded"
-/>
+                 type="tel"
+                 name="telephone"
+                 placeholder="Numéro de Téléphone"
+                 value={"+213" + telephoneSuffix}
+                 onChange={handleTelephoneChange}
+                 className="block w-full p-2 border rounded"
+               />
 
 <input
-  type="number"
-  name="salaire_jour"
-  placeholder="Salaire par jour"
-  value={employe.salaire_jour}
-  onChange={handleChange}
-  className="block w-full p-2 border rounded"
-/>
-
+            type="number"
+            name="salaire_jour"
+            placeholder="Salaire par Jour"
+            value={employe.salaire_jour}
+            onChange={handleChange}
+            className="block w-full p-2 border rounded"
+          />
+          {errorSalaire && <p className="text-red-500">{errorSalaire}</p>}
 <input
   type="text"
   name="centre"
@@ -93,8 +116,12 @@ const EditEmployeModal = ({ isOpen, onClose, onSave, employeData }) => {
   onChange={handleChange}
   className="block w-full p-2 border rounded"
 />
-          <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-            Update
+<button  
+                 type="submit" 
+                 className={`p-2 rounded text-white ${isFormValid ? 'bg-blue-500' : 'bg-red-500 cursor-not-allowed'}`}
+                 disabled={!isFormValid}
+          >
+            Mettre a jour
           </button>
         </form>
         <button onClick={onClose} className="absolute top-0 right-0 p-4">

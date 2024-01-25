@@ -5,17 +5,29 @@ const AddEmployeModal = ({ isOpen, onClose, onSave }) => {
     nom: '',
     prenom: '',
     adresse: '',
-    telephone: '',
-    salaire_jour: 0,
+    telephoneSuffix: '',
+    salaire_jour: '',
     centre: '',
   };
   const [employe, setEmploye] = useState(initialEmployeState);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const updatedValue = name === 'salaire_jour' ? parseFloat(value) : value;
-    setEmploye({ ...employe, [name]: updatedValue });
+    switch (name) {
+      case "salaire_jour":
+        if (parseFloat(value) < 0) {
+          setErrorSalaire("Salaire ne peut pas être négatif");
+        } else {
+          setErrorSalaire(""); 
+        }
+        setEmploye({ ...employe, [name]: value });
+        break;
+      default:
+        setEmploye({ ...employe, [name]: value });
+        break;
+    }
   };
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,6 +35,18 @@ const AddEmployeModal = ({ isOpen, onClose, onSave }) => {
     onClose();
     setEmploye(initialEmployeState);
   };
+  const [errorSalaire, setErrorSalaire] = useState("");
+  const [telephoneSuffix, setTelephoneSuffix] = useState('');
+
+  const handleTelephoneChange = (event) => {
+    const value = event.target.value.replace(/^\+213/, '');
+    if (/^\d*$/.test(value)) {
+      setTelephoneSuffix(value);
+      setEmploye({ ...employe, telephone: "+213" + value });
+    }
+  };
+  
+  const isFormValid = !errorSalaire ;
 
   if (!isOpen) return null;
 
@@ -56,14 +80,17 @@ const AddEmployeModal = ({ isOpen, onClose, onSave }) => {
             onChange={handleChange}
             className="block w-full p-2 border rounded"
           />
-          <input
-            type="text"
-            name="telephone"
-            placeholder="Numéro de Téléphone"
-            value={employe.telephone}
-            onChange={handleChange}
-            className="block w-full p-2 border rounded"
-          />
+          
+          
+               <input
+                 type="tel"
+                 name="telephone"
+                 placeholder="Numéro de Téléphone"
+                 value={"+213" + telephoneSuffix}
+                 onChange={handleTelephoneChange}
+                 className="block w-full p-2 border rounded"
+               />
+                        
           <input
             type="number"
             name="salaire_jour"
@@ -72,20 +99,29 @@ const AddEmployeModal = ({ isOpen, onClose, onSave }) => {
             onChange={handleChange}
             className="block w-full p-2 border rounded"
           />
-          <input
-            type="text"
+          {errorSalaire && <p className="text-red-500">{errorSalaire}</p>}
+          <select
             name="centre"
-            placeholder="Centre"
-            value={employe.centre}
+             value={employe.centre}
             onChange={handleChange}
             className="block w-full p-2 border rounded"
-          />
-          <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-            Save
+          >
+            <option value="">Select centre</option>
+            <option value={1}>1</option>
+            <option value={2}>2</option>
+            <option value={3}>3</option>
+            <option value={4}>4</option>
+          </select>
+          <button  
+                 type="submit" 
+                 className={`p-2 rounded text-white ${isFormValid ? 'bg-blue-500' : 'bg-red-500 cursor-not-allowed'}`}
+                 disabled={!isFormValid}
+          >
+            Enregistrer
           </button>
         </form>
         <button onClick={onClose} className="absolute top-0 right-0 p-4">
-          Close
+          fermer
         </button>
       </div>
     </div>

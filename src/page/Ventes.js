@@ -170,7 +170,8 @@ useEffect(() => {
         </div>
   
         <div className='w-[96%] bg-white rounded-xl shadow-xl m-2 md:m-4'>
-    {/* Header */}
+    
+    
 
 
     <div className='rounded-xl  bg-white shadow-2xl w-full'>
@@ -189,7 +190,7 @@ useEffect(() => {
   isOpen={isModalOpen}
   onClose={closeModal}
   onSave={handleSaveSale}
-  saleData={currentSale}
+  // saleData={currentSale}
 />
       </div>
       <div className='w-full flex flex-col items-center '>

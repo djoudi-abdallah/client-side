@@ -5,8 +5,8 @@ const AddClientModal = ({ isOpen, onClose, onSave }) => {
     nom: '',
     prenom: '',
     adresse: '',
-    telephone: '',
-    credit: 0,
+    telephoneSuffix: '',
+   
     centre: '',
   };
   const [client, setClient] = useState(initialClientState);
@@ -23,7 +23,16 @@ const AddClientModal = ({ isOpen, onClose, onSave }) => {
     onClose();
     setClient(initialClientState);
   };
+  
+  const [telephoneSuffix, setTelephoneSuffix] = useState('');
 
+  const handleTelephoneChange = (event) => {
+    const value = event.target.value.replace(/^\+213/, '');
+    if (/^\d*$/.test(value)) {
+      setTelephoneSuffix(value);
+      setClient({ ...client, telephone: "+213" + value });
+    }
+  };
   if (!isOpen) return null;
 
   return (
@@ -57,29 +66,29 @@ const AddClientModal = ({ isOpen, onClose, onSave }) => {
             className="block w-full p-2 border rounded"
           />
           <input
-            type="text"
-            name="telephone"
-            placeholder="Numéro de Téléphone"
-            value={client.telephone}
-            onChange={handleChange}
-            className="block w-full p-2 border rounded"
-          />
-          <input
-            type="number"
-            name="credit"
-            placeholder="Crédit"
-            value={client.credit}
-            onChange={handleChange}
-            className="block w-full p-2 border rounded"
-          />
-          <input
-            type="number"
-            name="centre"
-            placeholder="centre"
-            value={client.centre}
-            onChange={handleChange}
-            className="block w-full p-2 border rounded"
-          />
+                 type="tel"
+                 name="telephone"
+                 placeholder="Numéro de Téléphone"
+                 value={"+213" + telephoneSuffix}
+                 onChange={handleTelephoneChange}
+                 className="block w-full p-2 border rounded"
+               />
+          
+         
+                            
+         <select
+  name="centre"
+  value={client.centre}
+  onChange={handleChange}
+  className="block w-full p-2 border rounded"
+>
+  <option value="">Select Centre</option>
+  <option value={1}>Centre 1</option>
+  <option value={2}>Centre 2</option>
+  <option value={3}>Centre 3</option>
+  <option value={4}>Centre 4</option>
+</select>
+
           <button type="submit" className="bg-blue-500 text-white p-2 rounded">
             Enregistrer
           </button>

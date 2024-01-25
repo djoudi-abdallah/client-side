@@ -5,6 +5,7 @@ import TopBoard from '../component/TopBoard';
 import axios from 'axios';
 import AddClientModal from '../component/AddClientModal'; // Import the AddClientModal
 import EditClientModal from '../component/EditClientModal'; // Import the EditClientModal
+import AddReglementClient1 from '../component/AddReglementClient1';
 
 function Client() {
   const [clients, setClients] = useState([]);
@@ -58,7 +59,7 @@ function Client() {
 
   useEffect(() => {
     fetchClients();
-  }, []);
+  }, );
 
   const handleSaveClient = (clientData) => {
     if (currentClient) {
@@ -81,7 +82,32 @@ function Client() {
         });
     }
     closeAddModal();
-    closeEditModal(); // Close both Add and Edit Modals
+    closeEditModal();
+  };
+  const [isAddReglementOpen, setIsAddReglementOpen] = useState(false);
+
+  const handleOpenAddReglement = () => {
+    setIsAddReglementOpen(true);
+  };
+
+  const closeAddReglement = () => {
+    setIsAddReglementOpen(false);
+  };
+
+  const handleAddClientReglement = (reglementData) => {
+    axios
+      .post("http://localhost:3001/paiementscredits", {
+        centreID : reglementData.centre,
+        clientID : reglementData.client , 
+        amountPaid : reglementData.montantPaye
+      })
+      .then((response) => {
+        console.log("Paiement client ajouté avec succès :", response.data);
+        setIsAddReglementOpen(false);
+      })
+      .catch((error) => {
+        console.error("Erreur lors de l'ajout du paiement client :", error);
+      });
   };
 
   return (
@@ -91,12 +117,26 @@ function Client() {
         <TopBoard />
         <div className="flex justify-between mx-2 items-center">
           <h2 className="text-xl font-serif p-4 pl-10">Client Table</h2>
+          <div>
           <button
-            onClick={handleAddClick} // Use handleAddClick for adding
+           onClick={handleOpenAddReglement}
             className="bg-violet-500 text-white px-4 py-2 rounded-md my-4 mr-4"
           >
-            Add Client
+            Add Reglement
           </button>
+          {isAddReglementOpen && (
+        <AddReglementClient1
+        isOpen={isAddReglementOpen}
+        onClose={closeAddReglement}
+        onSave={handleAddClientReglement}/>
+      )}
+          <button
+            onClick={handleAddClick}
+            className="bg-violet-500 text-white px-4 py-2 rounded-md my-4 mr-4"
+          >
+            Add client
+          </button>
+          </div>
           <AddClientModal
             isOpen={isAddModalOpen}
             onClose={closeAddModal}
