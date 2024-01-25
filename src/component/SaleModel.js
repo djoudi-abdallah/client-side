@@ -58,13 +58,19 @@ const SaleModal = ({ isOpen, onClose, onSave, saleData }) => {
       setIsPriceValid(!isNaN(prixUnitaireValue) && prixUnitaireValue >= 0);
     }
     if (name === 'produit') {
-      const selectedProductData = produits.find((p) => p.produit === value);
+      const selectedProductData = produits.find((p) => p.produit == value);
       setSelectedProduct(selectedProductData);
+      console.log(selectedProductData);
+      setSale({ ...sale, [name]: value, quantite: '' });
+      setIsQuantiteValid(true); 
+    } else {
+      setSale({ ...sale, [name]: value });
     }
 
     if (name === 'quantite') {
-      const quantiteValue = parseInt(value);
-      setIsQuantiteValid(!isNaN(quantiteValue) && quantiteValue >= 0);
+      const quantiteValue = parseInt(value, 10);
+      const isValid = !isNaN(quantiteValue) && quantiteValue >= 0 && (!selectedProduct || quantiteValue <= selectedProduct.quantite);
+      setIsQuantiteValid(isValid);
     }
 
     if (name === 'montantEncaisse') {
@@ -136,8 +142,8 @@ const SaleModal = ({ isOpen, onClose, onSave, saleData }) => {
             className="block w-full p-2 border rounded"
           >
             <option value="">Sélectionnez un produit</option>
-            {produits.map((produit) => (
-              <option key={produit.code} value={produit.produit}>
+            {produits.map((produit , index) => (
+              <option key={index} value={produit.produit}>
                 {produit.produitDetails.name}
               </option>
             ))}
@@ -150,11 +156,13 @@ const SaleModal = ({ isOpen, onClose, onSave, saleData }) => {
             value={sale.quantite}
             onChange={handleChange}
             className={`block w-full p-2 border rounded ${
-              !isQuantiteValid ? 'bg-red-100' : ''
+              !isQuantiteValid ? 'bg-white' : ''
             }`}
           />
           {!isQuantiteValid && (
-            <p className="text-red-500">La quantité doit être supérieure ou égale à 0</p>
+            <p className="text-red-500">La quantité doit être supérieure ou égale à 0 ou Inferieur ou egale a Quantite du produit {
+              selectedProduct.quantite
+            }</p>
           )}
 
 <input
