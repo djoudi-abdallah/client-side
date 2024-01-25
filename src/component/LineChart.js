@@ -8,11 +8,10 @@ const LineChart = ({ idShop }) => {
 
   useEffect(() => {
     const fetchSalesmontant = async () => {
-      const apiUrl = "";
-      if (idShop) {
+   
         try {
           const response = await axios.get(
-            `${apiUrl}/analyse/benefice/${idShop}`
+            `http://localhost:3001/dashbord/monhana`
           );
           console.log("response", response.data);
           if (Array.isArray(response.data)) {
@@ -23,23 +22,10 @@ const LineChart = ({ idShop }) => {
         } catch (error) {
           console.error("Error fetching:", error);
         }
-      } else {
-        try {
-          const response = await axios.get(
-            `${apiUrl}/analyse/totalMontantAchat`
-          );
-          if (Array.isArray(response.data)) {
-            setSalesData(response.data);
-          } else {
-            console.error("Expected an array, received:", typeof response.data);
-          }
-        } catch (error) {
-          console.error("Error fetching:", error);
-        }
-      }
+     
     };
     fetchSalesmontant();
-  }, [idShop]);
+  }, []);
 
   useEffect(() => {
     if (!chartRef.current) return; // Check if the ref is defined
